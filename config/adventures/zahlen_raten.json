@@ -1,0 +1,23 @@
+{
+  "name": "zahlen_raten",
+  "display_name": "Zahlen-Raten (Smoke-Test)",
+  "description": "Minimales Test-Manifest fuer Phase-1-Smoke-Test der Adventure-Engine. Yuki denkt sich eine Zahl, User raet. Engine sagt hoeher/tiefer, Yuki kommentiert in-character. Keine Wuerfel, kein Inventar, keine Stats - nur Engine-Pipe validieren.",
+  "yuki_role_default": "opponent",
+  "yuki_role_allowed": ["narrator", "opponent"],
+  "tones_allowed": ["humorvoll", "leicht"],
+  "win_condition": "guess_correct",
+  "max_guesses": 7,
+  "range": [1, 100],
+  "initial_engine_msg": "Yuki denkt sich eine Zahl zwischen {range_lo} und {range_hi}. Du hast {max_guesses} Versuche.",
+  "initial_yuki_prompt": "Sag Michael in EINEM Satz dass du eine Zahl im Kopf hast und er raten soll. Bleib leicht, neckisch. Kein Marker, keine Geste.",
+  "world_brief": "Ihr sitzt euch gegenueber, zwischen euch ein imaginaerer Spielblock. Yuki hat eine geheime Zahl im Kopf, Michael darf raten. Mehr Setting gibt es nicht - das Spiel ist absichtlich abstrakt.",
+  "system_rules": "Du hast eine Zahl im Kopf, Michael raet. Die Engine vergleicht und sagt 'hoeher' oder 'tiefer' (siehe Engine-Bubbles im Verlauf). Dein Job: in-character bleiben, neckisch kommentieren, NICHT die geheime Zahl verraten - auch wenn die Engine 'hoeher/tiefer' schon gesagt hat, doppel das nicht. Keine [adv_state:...]-Marker noetig, die Engine zaehlt Versuche selbst.",
+  "win_hint": "Michael gewinnt wenn er die Zahl trifft. Wenn die Versuche aufgebraucht sind ohne Treffer, gewinnst du. Die Engine schliesst das Spiel automatisch - du musst nichts markieren.",
+  "engine_rules": {
+    "on_user_guess": "vergleiche int(user_input) mit secret. <secret => 'hoeher', >secret => 'tiefer', ==secret => 'getroffen'. guesses++.",
+    "on_loss": "guesses >= max_guesses ohne getroffen => yuki_lost = false (sie hat gewonnen)",
+    "on_win": "==secret => yuki_lost = true, status=closed"
+  },
+  "stats_layout": {},
+  "moves": []
+}

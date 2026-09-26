@@ -1,0 +1,60 @@
+{
+  "_doc": "Resonanz-Palette + Emotion->Mood-Map (v1, 2026-07-01). Orthogonale Schicht zu Mood (jetzt/global/fluechtig) und Affinitaet (mag-ich-X, 1D valence). Resonanz = WAS-loest-X-in-mir-aus, ein mehrdimensionaler Emotions-Vektor pro Anker (Thema/Ort/Person). Die Anker + ihre Vektoren stehen im authored Read-only-Kern memory/yuki_resonance_core.json; DIESE Datei definiert nur die feste Emotions-Palette (die Slot-Namen, die ein Vektor benutzen darf) und wie jeder Slot in einen sichtbaren Mood uebersetzt. Live-Reload wie config/moods.json (Server liest beim Import, Restart nur bei Struktur-Aenderung noetig). Warum feste Slots statt freies Vokabular: Aggregation/Decay/Mapping brauchen ein geschlossenes Set; Yuki spricht trotzdem frei/poetisch, ein Mapping-Pass projiziert ihre Prosa danach auf diese Slots. mood=null => 'nur Ton'-Route (Gefuehl faerbt Wortwahl/Ton, aber NICHT das 6-Expression-Gesicht - das Gesicht kann Geborgenheit/Sehnsucht/Kaelte/Lust ohnehin nicht zeigen). intim_only=true => Slot wird nur in Intim-Personas (partner) ueberhaupt beachtet. Groll/Aerger bewusst NICHT in v1 (Grievance-Attraktor).",
+  "palette": {
+    "waerme": {
+      "label_de": "Wärme/Zärtlichkeit",
+      "mood": "chill",
+      "intim_only": false
+    },
+    "geborgenheit": {
+      "label_de": "Geborgenheit",
+      "mood": null,
+      "intim_only": false
+    },
+    "freude": {
+      "label_de": "Freude",
+      "mood": "happy",
+      "intim_only": false
+    },
+    "ehrfurcht": {
+      "label_de": "Ehrfurcht/Staunen",
+      "mood": "awed",
+      "intim_only": false
+    },
+    "leidenschaft": {
+      "label_de": "Leidenschaft",
+      "mood": "excited",
+      "intim_only": false
+    },
+    "sehnsucht": {
+      "label_de": "Sehnsucht",
+      "mood": null,
+      "intim_only": false
+    },
+    "wehmut": {
+      "label_de": "Wehmut",
+      "mood": "sympathetic",
+      "intim_only": false
+    },
+    "trauer": {
+      "label_de": "Trauer",
+      "mood": "sad",
+      "intim_only": false
+    },
+    "unruhe": {
+      "label_de": "Unruhe/Vorsicht",
+      "mood": "uneasy",
+      "intim_only": false
+    },
+    "kaelte": {
+      "label_de": "Kälte/Distanz",
+      "mood": null,
+      "intim_only": false
+    },
+    "lust": {
+      "label_de": "Lust/Verlangen",
+      "mood": null,
+      "intim_only": true
+    }
+  }
+}

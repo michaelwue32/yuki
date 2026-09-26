@@ -1,0 +1,16 @@
+{
+  "poll_seconds": 8,
+  "quiet_after_comment_sec": 20,
+  "same_scene_minutes": 5,
+  "episode_memo": true,
+  "ha_announce_entity": "assist_satellite.home_assistant_voice_090df6_assist_satellit",
+  "knowledge_enabled": true,
+  "knowledge_interval_sec": 35,
+  "knowledge_frame_max_age_sec": 90,
+  "knowledge_max_categories": 8,
+  "knowledge_max_entries_per_category": 12,
+  "knowledge_max_chars": 3000,
+  "modes": {
+    "film": { "poll_seconds": 45, "quiet_after_comment_sec": 300, "same_scene_minutes": 12 }
+  }
+}

@@ -1,0 +1,160 @@
+# =============================================================================
+# Yuki .gitignore
+# =============================================================================
+# Faustregel: Code + deklarative Configs (config/*.json, *.jsonc) gehen ins
+# Repo. Yukis DATEN (memory/, keepsakes/, archive/) bleiben draussen - die
+# sichert tools/backup_yuki.ps1. Re-erzeugbare Assets (Wadoku-SQLite,
+# F5-Modell, Wadoku-XML-Dump) bleiben draussen weil gross + re-downloadbar.
+#
+# Wenn du etwas hier explizit DOCH committen willst, nutze `git add -f <pfad>`.
+
+# ---------------------------------------------------------------------------
+# Python / venv
+# ---------------------------------------------------------------------------
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# ---------------------------------------------------------------------------
+# Yukis Daten (durch backup_yuki.ps1 gesichert, nicht versioniert)
+# ---------------------------------------------------------------------------
+# Gedaechtnis-Tiers - rein State, sehr volatile, semantischer Diff sinnlos.
+# Verlust = via Backup-ZIP wiederherstellbar.
+memory/
+keepsakes/
+drawings/
+gedankenbilder/
+archive/
+runtime/
+ocr_samples/
+
+# ---------------------------------------------------------------------------
+# Re-erzeugbare grosse Assets
+# ---------------------------------------------------------------------------
+# Wadoku: SQLite-DB wird via tools/import_wadoku.py aus dem XML-Dump gebaut,
+# Original-XML-Dump ist von wadoku.de re-downloadbar (~100 MB).
+data/wadoku.sqlite
+data/wadoku-xml-*/
+data/wadoku-xml-*.tar.xz
+
+# KANJIDIC2 + KanjiVG: beide einmalig via docs/setup-kanji-data.md installiert,
+# beide offline-re-downloadbar (EDRDG bzw. KanjiVG-GitHub-Releases). DB ist
+# klein (~5 MB) aber re-erzeugbar; KanjiVG-SVGs sind ~25 MB / 13k Dateien.
+data/kanjidic2.sqlite
+data/kanjidic2.xml
+data/kanjidic2.xml.gz
+data/kanjivg/
+data/kanjivg.zip
+
+# Draw-Stempel-Bibliothek (OpenMoji, ~11 MB Bundles): von tools/fetch_draw_symbols.py
+# aus den OpenMoji-Release-Zips gebaut, jederzeit re-downloadbar. Nach frischem Clone
+# einmal das Fetch-Skript laufen lassen (sonst malt die Kuenstlerin nur Freihand).
+data/draw_symbols/
+
+# Self-hosted Web-Vendor-Assets (alle re-downloadbar, drum draussen):
+#  - mediapipe/  : Selfie-Segmentation WASM+Modell ~19 MB (tools/fetch_mediapipe.py)
+#  - three/, three-vrm/, marked/ : Avatar-/UI-Libs ~2.7 MB (tools/fetch_web_vendor.py)
+# Beide laufen lokal aus web/vendor/ (server.py -> /vendor/), kein CDN zur Laufzeit.
+# Nach frischem Clone einmal beide Fetch-Skripte laufen lassen.
+web/vendor/
+
+# F5-TTS-Modell - re-downloadbar von HuggingFace (siehe docs/setup-f5-tts.md)
+voices/f5tts/
+
+# Piper-TTS-Modelle - re-downloadbar von HuggingFace, je ~60 MB.
+# Yukis primaere TTS-Engines sind GPT-SoVITS + F5; Piper ist Fallback/Test.
+voices/piper/
+
+# Avatar-Sources (VRoid-Quellen, Mixamo-FBX-Originale)
+# Nur exportierte .vrm + .vrma gehoeren ins Repo (was Yuki tatsaechlich laedt).
+avatar/source/
+avatar/animations_source/
+
+# Test-Outputs (WAV-Renders aus tests/)
+tests/outputs/
+
+# Referenz-Smoke-Set: Baselines + Fixtures sind volatil + maschinen-/stimmen-
+# abhaengig (pro Maschine via reference_check.py --capture neu abnehmen).
+# Das Manifest + README gehoeren REIN, die abgenommenen Daten nicht.
+tests/reference/baselines/
+tests/reference/fixtures/
+
+# Theme-Debug-Screenshots (Light-Mode-Iterations 2026-06-04, lokal als Vergleich)
+tests/screenshots/
+
+# ---------------------------------------------------------------------------
+# Geheimnisse - NIEMALS einchecken
+# ---------------------------------------------------------------------------
+# CalDAV-Credentials (Klartext). Template steckt als yuki_calendar.template.json.
+config/yuki_calendar.json
+
+# Home-Assistant-Token + Geraete-Allowlist (Klartext). Template steckt als
+# yuki_homeassistant.template.json.
+config/yuki_homeassistant.json
+
+# Kamera-Credentials (Klartext). Template steckt als cameras.template.json.
+config/cameras.json
+
+# ntfy-Push-Token (Klartext). Template steckt als ntfy.template.json.
+config/ntfy.json
+
+# Self-signed Certs (re-erzeugbar mit OpenSSL, nicht sensitiv aber unnoetig)
+certs/
+
+# ---------------------------------------------------------------------------
+# Capacitor (mobile/) - Android-Wrapper, seit 2026-06-05 (siehe yuki-capacitor-mobile)
+# ---------------------------------------------------------------------------
+# Code (capacitor.config.json + AndroidManifest.xml + res/) wird versioniert.
+# Build-Stuff in mobile/android/ ist via mobile/android/.gitignore abgedeckt
+# (Android-Template + Capacitor-Generated-Assets); hier nur die Top-Level-Reste.
+mobile/node_modules/
+mobile/package-lock.json
+# Wake-Word pre-trained Pipeline-Modelle (~15 MB) sind re-erzeugbar via
+# tools/fetch_wakeword_models.py (pip install openwakeword). Nicht versionieren.
+# Custom-Modelle (ohayoo_yuki.onnx, ~250 KB) gehoeren IN - sie sind unser
+# Trainings-Output und nicht trivial reproduzierbar (siehe docs/setup-wakeword-training.md).
+mobile/android/app/src/main/assets/wakeword/*
+!mobile/android/app/src/main/assets/wakeword/ohayoo_yuki.onnx
+# www/ ist Stub - Capacitor verlangt einen webDir damit `cap add android`
+# durchgeht, der WebView laedt aber von server.url. Stub-index.html committen
+# wir damit ein frischer Clone sofort buildbar ist; alles andere in www/ waere
+# versehentlich da.
+
+# ---------------------------------------------------------------------------
+# Editor / OS / Tools
+# ---------------------------------------------------------------------------
+# Claude-Code-Workstation-State (Per-User Permissions). CLAUDE.md selbst
+# ist Projekt-Doku und gehoert REIN.
+.claude/settings.local.json
+
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup-Skript-Ausgabe (steht ausserhalb des Repos, aber falls jemand mal
+# -OutputDir auf '.' setzt, NICHT versioniert).
+*.zip
+yuki_*.zip
+
+# Praesentationen: Generier-Skripte + img/-Assets sind Code und gehen ins Git.
+# Nur die generierten Outputs + Render-Cache bleiben draussen.
+presentation/__pycache__/
+presentation/_render/
+presentation/*.pptx
+presentation/*.pdf
+
+# Gesichtserkennung (biometrik-nah / laufzeit; memory/ ist oben schon global ignoriert)
+memory/yuki_faces.json
+memory/faces/
+data/face_models/
+
+# Visual-companion (Brainstorming) scratch
+.superpowers/

@@ -1,0 +1,85 @@
+// ============================================================================
+// settings.example.jsonc - Beispiel-Konfiguration fuer Yuki (yuki-public)
+// ============================================================================
+//
+// Kopiere diese Datei nach config/settings.jsonc und passe sie an. Sie ist
+// OPTIONAL: jeder Key hat im Code einen hartcodierten Fallback. Wenn die Datei
+// fehlt, laeuft Yuki mit den Defaults. Kommentare (// und /* */) sind erlaubt.
+//
+// Dies ist ein KURATIERTER Ausschnitt der Sektionen, die man beim Aufsetzen am
+// ehesten braucht. Die vollstaendige Referenz aller Tunables (Memory-Tiers,
+// Decay, Affinitaeten, ...) steht als Kommentar direkt im Code bzw. wird beim
+// Erweitern hier ergaenzt.
+//
+// Nach Aenderungen: Server neu starten (kein Live-Reload).
+// ============================================================================
+{
+
+  // ---- LLM: Ollama-Server nach Prioritaet [Name, Base-URL, Modell-Tag] ----
+  // Der erste ERREICHBARE Server mit dem angegebenen Modell wird gewaehlt.
+  // Default: nur der lokale Ollama. Weitere Zeilen = Failover auf andere Hosts.
+  "llm": {
+    "ollama_servers": [
+      ["Lokal", "http://localhost:11434", "gemma3:12b"]
+    ],
+    "auto_upgrade_enabled": true,
+    "auto_upgrade_interval_sec": 300
+  },
+
+  // ---- STT: faster-whisper (optional, GPU empfohlen) ----
+  "stt": {
+    "whisper_model": "large-v3",   // klein: "small"/"base"/"tiny" (weniger VRAM)
+    "whisper_device": "cuda",      // "cpu" als Fallback ohne GPU
+    "remote_url": "",              // leer = in-process; sonst URL eines STT-Dienstes
+    "rec_sample_rate": 16000
+  },
+
+  // ---- TTS: Qwen3-TTS (optional, eigener Service qwen_server.py auf :5006) ----
+  // Ohne TTS-Dienst laeuft Yuki als reiner Text-Chat. Referenz-WAVs bringst du
+  // selbst mit (bring-your-own, siehe INSTALL.md) und legst sie relativ ab.
+  "qwen_tts": {
+    "host":        "127.0.0.1",
+    "url":         "http://localhost:5006/tts",
+    "stream_url":  "http://localhost:5006/tts_stream",
+    "health":      "http://localhost:5006/health",
+    "sample_rate": 24000,
+    "model_id":    "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+    "ref_audio":   "voices/ref.wav",       // deine Referenz fuer EN/JA (3-10 s)
+    "ref_text":    "Kurzer Referenz-Text, der WORTGENAU zum Clip passt.",
+    "ref_audio_de":"voices/ref_de.wav",    // deine Referenz fuer Deutsch
+    "ref_text_de": "Kurzer deutscher Referenz-Text, wortgenau zum Clip.",
+    "stream_min_chars": 120,
+    "instruct_lang": "en"
+  },
+
+  // ---- Vision: LFM2.5-VL via llama.cpp (optional, Yukis "Augen") ----
+  "vision": {
+    "enabled": true,
+    "url": "http://127.0.0.1:8081/v1/chat/completions",
+    "max_tokens": 256,
+    "timeout_seconds": 30
+  },
+
+  // ---- Wetter: Open-Meteo (das Einzige, das Richtung Internet geht) ----
+  "weather": {
+    "enabled": true,
+    "location": "Berlin",          // dein Ort fuers Geocoding
+    "country": "DE",               // ISO 3166-1 alpha-2
+    "ttl_seconds": 3600,
+    "timezone": "Europe/Berlin"
+  },
+
+  // ---- Server (Web-BFF, HTTPS mit self-signed Cert) ----
+  "server": {
+    "port": 8443,
+    "tts_stream_mobile": true,
+    "auto_vision_default": { "enabled": false },
+    "proactive_default":   { "enabled": false }
+  },
+
+  // ---- Identitaet: Yukis Biografie (frei anpassbar) ----
+  "identity": {
+    "birth_date": "1991-03-21",
+    "birth_place": "Sakyo-ku, Kyoto"
+  }
+}

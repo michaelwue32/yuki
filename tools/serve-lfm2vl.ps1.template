@@ -1,0 +1,20 @@
+# =============================================================
+# serve-lfm2vl.ps1 - Start-Skript fuer den LFM2.5-VL-1.6B Vision-Server
+# =============================================================
+#
+# Das hier ist die Vorlage, die im Yuki-Repo lebt und damit im Backup ist.
+# Im Crashfall: nach `D:\Server\llama.cpp\serve-lfm2vl.ps1` kopieren
+# (oder Pfade unten anpassen, falls llama.cpp woanders liegt).
+#
+# Setup-Anleitung fuer den ganzen Vision-Stack: docs\setup-vision-lfm2.md
+# =============================================================
+#
+# Startet LFM2.5-VL-1.6B ("Yukis Augen") als llama.cpp-Server auf 127.0.0.1:8081.
+# Konsole offen lassen (wie GPT-SoVITS). Test: http://127.0.0.1:8081/health
+# -c 4096: kleines Context-Fenster, weil eine Bildbeschreibung selten >400 Tokens
+# braucht (Bild-Embed ~256 + Prompt ~100 + Antwort ~50). Spart ~2-3 GB KV-Cache
+# gegenueber dem Modell-Default (16k/32k) -> Platz fuer SoVITS auf der 3060.
+& "D:\Server\llama.cpp\llama-server.exe" `
+  -m "D:\Server\llama.cpp\models\lfm2-vl-1.6b.gguf" `
+  --mmproj "D:\Server\llama.cpp\models\mmproj.gguf" `
+  --host 127.0.0.1 --port 8081 -ngl 99 -c 4096

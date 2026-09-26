@@ -1,0 +1,125 @@
+{
+  "_comment": [
+    "Habit-Profile fuer Concern-Score-Bewertung + Drift-Konsolidierung.",
+    "",
+    "tags:    pro Tag eine concern-Kurve (score je Category). Habits ohne Tag",
+    "         fallen auf 'default'. Hoehere Werte = Yuki bekommt das prominenter",
+    "         im Prompt zu sehen.",
+    "habits:  pro Habit-Schluessel ein Tag (optional). Subject ist informativ",
+    "         (das LLM-Gate setzt es ohnehin selbst).",
+    "aliases: drift fix - alternativer Schluessel -> kanonischer Schluessel.",
+    "         Beim INSERT wird der Alias zum Ziel aufgeloest (verhindert",
+    "         spazieren_gangen vs spazieren_gehen-Wildwuchs).",
+    "",
+    "Live-Reload: yuki_habits_db liest die Datei bei jedem recompute_summary()",
+    "frisch. Datei loeschen -> alle Habits fallen auf 'default'-Tag zurueck."
+  ],
+  "tags": {
+    "default": {
+      "sehr_oft":        0.50,
+      "fester_rhythmus": 0.30,
+      "regelmaessig":    0.25,
+      "unregelmaessig":  0.20,
+      "selten":          0.10,
+      "beunruhigend":    0.30
+    },
+    "health-negative": {
+      "sehr_oft":        0.95,
+      "fester_rhythmus": 0.80,
+      "regelmaessig":    0.55,
+      "unregelmaessig":  0.30,
+      "selten":          0.10,
+      "beunruhigend":    0.10
+    },
+    "health-positive": {
+      "sehr_oft":        0.05,
+      "fester_rhythmus": 0.05,
+      "regelmaessig":    0.10,
+      "unregelmaessig":  0.20,
+      "selten":          0.30,
+      "beunruhigend":    0.80
+    },
+    "mood-positive": {
+      "sehr_oft":        0.00,
+      "fester_rhythmus": 0.00,
+      "regelmaessig":    0.00,
+      "unregelmaessig":  0.05,
+      "selten":          0.10,
+      "beunruhigend":    0.40
+    },
+    "mood-negative": {
+      "sehr_oft":        0.85,
+      "fester_rhythmus": 0.70,
+      "regelmaessig":    0.55,
+      "unregelmaessig":  0.30,
+      "selten":          0.10,
+      "beunruhigend":    0.00
+    },
+    "work": {
+      "sehr_oft":        0.30,
+      "fester_rhythmus": 0.15,
+      "regelmaessig":    0.15,
+      "unregelmaessig":  0.20,
+      "selten":          0.10,
+      "beunruhigend":    0.30
+    },
+    "leisure": {
+      "sehr_oft":        0.10,
+      "fester_rhythmus": 0.10,
+      "regelmaessig":    0.10,
+      "unregelmaessig":  0.15,
+      "selten":          0.20,
+      "beunruhigend":    0.30
+    }
+  },
+  "habits": {
+    "alkohol":            {"tag": "health-negative"},
+    "rauchen":            {"tag": "health-negative"},
+    "joggen":             {"tag": "health-positive"},
+    "fahrrad_fahren":     {"tag": "health-positive"},
+    "sport_treiben":      {"tag": "health-positive"},
+    "spazieren_gehen":    {"tag": "health-positive"},
+    "diabetes_verwalten": {"tag": "health-positive"},
+    "schlaeft_schlecht":  {"tag": "mood-negative"},
+    "tired":              {"tag": "mood-negative"},
+    "stressed":           {"tag": "mood-negative"},
+    "feels_sad":          {"tag": "mood-negative"},
+    "feels_safe":         {"tag": "mood-positive"},
+    "feels_warm":         {"tag": "mood-positive"},
+    "feels_relaxed":      {"tag": "mood-positive"},
+    "feels_content":      {"tag": "mood-positive"},
+    "feels_proud":        {"tag": "mood-positive"},
+    "feels_loving":       {"tag": "mood-positive"},
+    "feels_curious":      {"tag": "mood-positive"},
+    "feels_grateful":     {"tag": "mood-positive"},
+    "programmieren":      {"tag": "work"},
+    "arbeiten":           {"tag": "work"},
+    "basteln":            {"tag": "leisure"},
+    "video_spiele":       {"tag": "leisure"},
+    "fernsehen":          {"tag": "leisure"},
+    "musik_hoeren":       {"tag": "leisure"},
+    "anime_schauen":      {"tag": "leisure"},
+    "serien_schauen":     {"tag": "leisure"},
+    "klavierspielen":     {"tag": "leisure"}
+  },
+  "aliases": {
+    "spazieren_gangen":         "spazieren_gehen",
+    "spazieren_gegangen":       "spazieren_gehen",
+    "tictactoe_spielen":        "video_spiele",
+    "street_fighter":           "video_spiele",
+    "retro_games":              "video_spiele",
+    "streetfighter_sammlung":   "video_spiele",
+    "videospiele_spielen":      "video_spiele",
+    "computer_arbeiten":        "programmieren",
+    "bugs_beheben":             "programmieren",
+    "debugging":                "programmieren",
+    "avatar_projekt_basteln":   "basteln",
+    "feels_love":               "feels_loving",
+    "feels_glücklich":          "feels_content",
+    "feels_intimate":           "feels_loving",
+    "feels_accepted":           "feels_safe",
+    "feels_connected":          "feels_loving",
+    "feels_overjoyed":          "feels_content",
+    "relaxed":                  "feels_relaxed"
+  }
+}

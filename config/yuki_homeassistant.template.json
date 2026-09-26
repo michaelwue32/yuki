@@ -1,0 +1,10 @@
+{
+  "_comment": "Home-Assistant-Anbindung fuer Yuki. Kopiere diese Datei nach config/yuki_homeassistant.json (gitignored) und fuelle sie aus. Token erzeugen: HA -> unten links Profil -> Reiter Sicherheit -> 'Langlebige Zugriffstoken' -> Token erstellen (wird nur EINMAL angezeigt). Geraete bequem per 'python tools/ha_discover.py' eintragen lassen (neue kommen enabled:false rein). Die devices-Allowlist ist eng gemeint: Yuki sieht/schaltet NUR Eintraege mit enabled:true.",
+  "base_url": "http://127.0.0.1:8123",
+  "token": "PASTE_LONG_LIVED_TOKEN_HERE",
+  "_converse_token_comment": "OPTIONAL (Phase 2, Voice): Shared-Secret fuer den /ha/converse-Endpoint, ueber den HAs Assist-Pipeline mit Yuki spricht. Leer/weglassen = offen (LAN-Trust wie der Rest des BFF). Gesetzt -> das custom_components/yuki_conversation muss denselben Wert als X-Yuki-Token mitschicken (im HA-Config-Flow eintragen).",
+  "converse_token": "",
+  "devices": [
+    {"entity_id": "light.example_lamp", "name": "Beispiellampe", "area": "Wohnzimmer", "enabled": true}
+  ]
+}

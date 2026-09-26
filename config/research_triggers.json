@@ -1,0 +1,46 @@
+{
+  "_doc": "Auto-Trigger-Stichworte fuer den Gehirn-Toggle (🧠 Recherche-Modus). Browser-Reload reicht zum Anwenden - kein Server-Restart noetig. Wird vom Frontend ueber /config/research_triggers.json bei jedem Page-Load frisch geholt; fehlt die Datei oder ist sie kaputt, fallen die hardcoded JS-Defaults in web/index.html ein. Reihenfolge der Pruefung in detectResearchIntent(): erst negStart (am Satzanfang -> NIE Trigger), dann affirmCont (nur wenn letzter Yuki-Turn research war), dann URL-Match (Regex hardcoded), dann de/en/jp (Substring irgendwo im Text).",
+
+  "_meta": {
+    "version": 2,
+    "last_edited": "2026-06-20",
+    "_changelog": "v2 (2026-06-20): zu generische Alltagswoerter raus, die im normalen Geplauder staendig falsch triggerten: 'heute'/'today'/'今日', 'letzte', 'wie viel'/'how many'. 'gerade'/'aktuell'/'kennst du' bewusst behalten (passten meist). Begleitend: Auto-Trigger schaltet nicht mehr hart an, sondern laesst den 🧠-Button nur pulsieren (suggestResearch in web/index.html)."
+  },
+
+  "de": [
+    "recherchier", "such mal", "google", "schau mal nach", "find heraus",
+    "check mal", "aktuell", "gerade", "momentan", "neueste",
+    "weißt du ob", "weisst du ob", "weißt du was", "weisst du was", "kennst du",
+    "wie hoch", "wann war", "wann ist", "wie alt ist",
+    "wetter in", "nachrichten", "news", "stimmt es dass"
+  ],
+
+  "en": [
+    "search", "google", "look up", "find out", "check the web",
+    "right now", "currently", "latest", "recent",
+    "do you know if", "do you know what", "when did", "when was",
+    "how old is", "weather in", "news", "headlines", "is it true that"
+  ],
+
+  "jp": [
+    "検索", "調べて", "ぐぐって", "探して", "今", "現在", "最新",
+    "天気", "ニュース"
+  ],
+
+  "_doc_negStart": "negStart: matched AM ANFANG der User-Msg -> blockt den 🧠-Trigger. Meinungs-/Geschmacks-Fragen sollen nie Recherche ausloesen, egal welche positiven Worte spaeter im Satz folgen.",
+  "negStart": [
+    "findest du", "was hältst du", "was haelst du",
+    "gefällt dir", "gefaellt dir", "magst du",
+    "do you think", "do you like"
+  ],
+
+  "_doc_affirmCont": "affirmCont: matched NUR wenn der letzte Yuki-Turn eine Recherche-Antwort war (Folge-Bestaetigung wie 'ja gerne mach das'). BEWUSST eng gefasst: 'ja'/'ok'/'klar' alleine sind zu generisch und wuerden 'ja schoen' als Smalltalk faelschlich research markieren. Token werden gegen den Anfang der getrimmt-lowercase User-Msg gematcht (s===kw oder s.startsWith(kw+' '/','/'!'/'.').",
+  "affirmCont": [
+    "ja gerne", "ja bitte", "ja klar", "ja danke",
+    "mach das", "mach mal", "tu das",
+    "weiter", "weiter bitte", "erzähl weiter", "erzaehl weiter",
+    "ja erzähl", "ja erzaehl", "bitte erzähl", "bitte erzaehl",
+    "yes please", "go ahead", "do it", "continue", "tell me more",
+    "お願い", "続けて", "頼む"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "_doc": "Persona-Visuals: VRM-Expression-Default UND VRM-Outfit-Mapping pro Persona. 'expressions' greift wenn KEIN Mood aktiv ist (Mood ueberlagert immer). 'outfits' triggert Hot-Swap des VRM-Modells bei Persona-Wechsel (Avatar laedt das neue Outfit ohne Page-Reload, siehe docs/avatar-web.md). Persona-Keys entsprechen den Eintraegen in yuki_core.PERSONAS. Format: expressions[persona] = [expression-name, intensity-float]; outfits[persona] = 'Filename.vrm' (Datei muss im avatar/-Ordner liegen). Wer im outfits-Block nicht steht, behaelt das aktuell geladene Outfit beim Wechsel auf diese Persona.",
+  "expressions": {
+    "tutor":       ["happy",    0.1],
+    "smalltalk":   ["neutral",  1.0],
+    "sibling":     ["relaxed",  0.55],
+    "confidante":  ["relaxed",  0.5],
+    "partner":     ["happy",    0.1],
+    "party":       ["happy",    0.15],
+    "gamer":       ["relaxed",  0.55],
+    "comforter":   ["relaxed",  0.6],
+    "philosopher": ["neutral",  0.9],
+    "coach":       ["happy",    0.20],
+    "storyteller": ["relaxed",  0.5],
+    "kyoto":       ["relaxed",  0.5],
+    "secretary":   ["neutral",  1.0]
+  },
+  "outfits": {
+    "tutor":       "Yuki_school.vrm",
+    "smalltalk":   "Yuki_default.vrm",
+    "sibling":     "Yuki_after-school.vrm",
+    "confidante":  "Yuki_default.vrm",
+    "partner":     "Yuki_short-dress.vrm",
+    "party":       "Yuki_violet.vrm",
+    "gamer":       "Yuki_gamer.vrm",
+    "comforter":   "Yuki_winter.vrm",
+    "philosopher": "Yuki_kimono.vrm",
+    "coach":       "Yuki_sport.vrm",
+    "storyteller": "Yuki_kimono.vrm",
+    "kyoto":       "Yuki_kyoto.vrm",
+    "secretary":   "Yuki_secretary.vrm",
+    "kuenstlerin": "Yuki_black.vrm"
+  }
+}

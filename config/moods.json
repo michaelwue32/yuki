@@ -1,0 +1,39 @@
+{
+  "_doc": "Yukis Mood-Definitionen — die 16 möglichen autonomen Stimmungen. Jeder Mood ist eine Liste von [VRM-Expression, Intensität]-Paaren; mehrere können kombiniert werden (z.B. 'shy' = relaxed + surprised gleichzeitig). VRM-Expressions: neutral, happy, angry, sad, relaxed, surprised. Yuki schaltet ihren Mood ausschließlich selbst via [mood:KEY]-Marker (siehe BASE_RULES in yuki_core.py); Bei Persona-Wechsel reset auf null (Persona-Default greift wieder). Kein Auto-Decay - sie entscheidet wann sie wieder neutral wird. Intensitäten bewusst dezent gewählt (happy=0.15 nicht 0.6, sonst karikiert das Lächeln zur Grimasse). Wer hier Werte ändert, ändert Yukis sichtbares Gesicht; Yukis verfügbare Mood-Liste wird zur Laufzeit aus den Keys hier abgeleitet.",
+  "decay": {
+    "_doc": "Nach einer Sprech-Phase fadet Yukis aktiver Mood zurueck auf den Persona-Default. wait_s = Pause nach Speech-End (Sekunden) bevor der Fade startet; lerp_s = Dauer des Fades selbst. Frontend live-reloadet aus dieser Datei, Restart nicht noetig. Defaults waren bis 2026-06-04 hardcoded auf 1.0/4.0; hochsetzen wenn Yukis Mood beim Antworten zu schnell verschwindet, runter wenn er klebrig wird.",
+    "wait_s": 1.0,
+    "lerp_s": 4.0
+  },
+  "moods": {
+    "neutral":     [["neutral",   1.0]],
+    "happy":       [["happy",     0.1],  ["relaxed",   0.7], ["sad", 0.2]],
+    "playful":     [["happy",     0.3],  ["relaxed",   0.9]],
+    "chill":       [["relaxed",   0.8],  ["happy",     0.1]],
+    "annoyed":     [["angry",     0.8],  ["relaxed",   0.8]],
+    "angry":       [["angry",     0.9]],
+    "sad":         [["sad",       0.7]],
+    "thoughtful":  [["neutral",   0.5],  ["sad",       0.2]],
+    "surprised":   [["surprised", 0.8]],
+    "shy":         [["relaxed",   0.4],  ["surprised", 0.3]],
+    "sympathetic": [["relaxed",   0.4],  ["sad",       0.2]],
+    "curious":     [["happy",     0.08], ["surprised", 0.25]],
+    "proud":       [["happy",     0.2],  ["relaxed",   0.3]],
+    "tired":       [["relaxed",   0.8],  ["sad",       0.7]],
+    "focused":     [["neutral",   0.6],  ["angry",     0.5]],
+    "excited":     [["Surprised", 0.5],  ["happy",     1.0]],
+    "awed":        [["surprised", 0.3],  ["relaxed",   0.3], ["neutral", 0.4]],
+    "uneasy":      [["neutral",   0.5],  ["sad",       0.25], ["surprised", 0.15]]
+  },
+  "_voice_doc": "Optionale Emotions-Phrase je Mood fuer Qwen3-TTS (nur wenn tts.engine=qwen). Wird als instruct-Anweisung an Qwen3 genutzt und vom Multiplier in memory/yuki_voice_runtime.json skaliert (0 = kein Ausdruck). Live-Reload. Nur Companion-Personas; kyoto/tutor bleiben neutral. Leerer String = kein instruct.",
+  "voice_instruct": {
+    "neutral": "", "happy": "warm, cheerful and lively", "playful": "playful and light",
+    "chill": "relaxed and easygoing", "annoyed": "a little terse", "angry": "tense and sharp",
+    "sad": "soft, melancholic and wistful", "thoughtful": "calm and reflective",
+    "surprised": "surprised and animated", "shy": "soft and a little hesitant",
+    "sympathetic": "gentle and caring", "curious": "curious and engaged",
+    "proud": "warm and pleased", "tired": "low-energy, slow and soft",
+    "focused": "steady and deliberate", "excited": "bright and energetic",
+    "awed": "hushed and full of wonder", "uneasy": "tense and a little anxious"
+  }
+}

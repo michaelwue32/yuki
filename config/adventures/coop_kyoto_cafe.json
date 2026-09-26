@@ -1,0 +1,106 @@
+{
+  "name": "coop_kyoto_cafe",
+  "display_name": "Co-Op: Aiko-sans Mochi-Cafe",
+  "description": "Du und Yuki sind abends in Aiko-sans Mochi-Cafe, als drei betrunkene Raeuber hereinstuermen. Cozy-Setting, aber kurzer Kampf - ihr verteidigt das Cafe und Aiko-san zu zweit. Yuki hybrid: greift nur an wenn angegriffen, kommentiert sonst und agiert in der Welt. Heal-Moves heilen den jeweils anderen.",
+  "yuki_role_default": "companion",
+  "yuki_role_allowed": ["companion"],
+  "tones_allowed": ["warm", "fokussiert", "humorvoll"],
+  "win_condition": "all_threats_down",
+  "starting_hp": 30,
+  "starting_sp": 5,
+  "yuki_character_id": "yuki_iaido",
+  "michael_character_default": "shotokan_brawler",
+  "initial_engine_msg": "Aiko-sans Mochi-Cafe in Sakyo-ku, frueher Abend. Holzbalken, der Geruch von gerade gebrannten Reisbaellchen. Aiko-san wischt gerade den letzten Tisch ab, als die Schiebetuer aufgerissen wird - drei junge Maenner, betrunken, einer schwingt eine Sake-Flasche. Aiko-san erstarrt. Yuki ist schon auf den Beinen, neben dir. Runde 1 - du bist zuerst dran.",
+  "characters": {
+    "yuki_iaido": {
+      "name": "Yuki (Kyoto-Iaido)",
+      "description": "Schwertzieh-Kunst aus dem Sanjusangendo-Dojo. Schnell, praezise, mit Augen wie Stille.",
+      "moves": [
+        {"id": "hayate",         "name": "Hayate",         "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Schneller Schnitt nach vorn"},
+        {"id": "iai_nuki",       "name": "Iai-Nuki",       "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Blitz-Ziehschnitt aus der Scheide"},
+        {"id": "mawashi_uke",    "name": "Mawashi-Uke",    "sp_cost": 0, "sp_regen": 1, "damage": "1d3",   "accuracy": 16, "description": "Kreis-Block mit kontrolliertem Konter, sammelt 1 SP"},
+        {"id": "suiheigiri",     "name": "Suiheigiri",     "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Horizontaler Schwung in Hueftehoehe"},
+        {"id": "tsubame_gaeshi", "name": "Tsubame-Gaeshi", "sp_cost": 3, "damage": "1d8+3", "accuracy": 10, "description": "Schwalben-Rueckschlag - riskant, aber heftig"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Atemruhe + eigener Heiltee, heilt dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Verband + schneller Heiltee, heilt Michael"}
+      ]
+    },
+    "shotokan_brawler": {
+      "name": "Shotokan-Brawler",
+      "description": "Klassischer Karate-Mix: Geradeaus, hart, mit ikonischen Specials. Inspiriert von Ryu-Style.",
+      "moves": [
+        {"id": "jab",            "name": "Jab",            "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Schneller gerader Faustschlag"},
+        {"id": "shoryuken",      "name": "Shoryuken",      "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Aufsteigender Drachenschlag"},
+        {"id": "hadouken",       "name": "Hadouken",       "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Energiestoss aus beiden Handflaechen"},
+        {"id": "tatsumaki",      "name": "Tatsumaki",      "sp_cost": 3, "damage": "1d8+1", "accuracy": 11, "description": "Wirbelnder Tornado-Kick"},
+        {"id": "guard",          "name": "Guard",          "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Block mit kurzem Konter, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Cafe-Theke, heilt Yuki"}
+      ]
+    },
+    "speed_kicker": {
+      "name": "Speed-Kicker",
+      "description": "Beinarbeit-Spezialistin mit Tempo-Vorteil. Inspiriert von Chun-Li-Style.",
+      "moves": [
+        {"id": "lightkick",      "name": "Light-Kick",     "sp_cost": 0, "damage": "1d4+1", "accuracy": 15, "description": "Schneller niedriger Tritt"},
+        {"id": "spinning_bird",  "name": "Spinning Bird",  "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Wirbel-Tritt aus der Drehung"},
+        {"id": "lightning_legs", "name": "Lightning Legs", "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Schnellfeuer-Trittserie"},
+        {"id": "neck_breaker",   "name": "Neck-Breaker",   "sp_cost": 3, "damage": "1d8+2", "accuracy": 10, "description": "Sprung-Kombination zum Nacken"},
+        {"id": "tactical_dodge", "name": "Tactical Dodge", "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Ausweichen mit Konter, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Cafe-Theke, heilt Yuki"}
+      ]
+    },
+    "grappler": {
+      "name": "Grappler",
+      "description": "Naher Griff-Kampf mit schweren Wuerfen. Inspiriert von Zangief-Style.",
+      "moves": [
+        {"id": "headbutt",       "name": "Headbutt",       "sp_cost": 0, "damage": "1d4+2", "accuracy": 13, "description": "Stirn voraus - simpel und brutal"},
+        {"id": "body_slam",      "name": "Body-Slam",      "sp_cost": 2, "damage": "1d6+3", "accuracy": 11, "description": "Niederwerfen mit voller Wucht"},
+        {"id": "spinning_pile",  "name": "Spinning Pile",  "sp_cost": 3, "damage": "1d8+3", "accuracy": 9,  "description": "Drehender Pile-Driver"},
+        {"id": "double_lariat",  "name": "Double Lariat",  "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Beidarmiger Schwung - trifft auch durch Block"},
+        {"id": "iron_guard",     "name": "Iron Guard",     "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 17, "description": "Massiger Block, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Cafe-Theke, heilt Yuki"}
+      ]
+    },
+    "charge_fighter": {
+      "name": "Charge-Fighter",
+      "description": "Militaerischer Stil mit Lade-Specials. Inspiriert von Guile-Style.",
+      "moves": [
+        {"id": "backhand",       "name": "Backhand",       "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Rueckhand-Schlag im Vorbeigehen"},
+        {"id": "sonic_boom",     "name": "Sonic Boom",     "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Schallwellen-Wurf aus dem Stand"},
+        {"id": "flash_kick",     "name": "Flash-Kick",     "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Aufsteigender Sturzflug-Tritt"},
+        {"id": "knee_smash",     "name": "Knee-Smash",     "sp_cost": 3, "damage": "1d8+2", "accuracy": 10, "description": "Sprung-Knie mit voller Wucht"},
+        {"id": "stance",         "name": "Stance",         "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Stehende Verteidigung, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Cafe-Theke, heilt Yuki"}
+      ]
+    }
+  },
+  "threats": [
+    {
+      "id": "rauber_links",
+      "name": "Magerer Raeuber",
+      "hp": 12, "ac": 11, "dmg": "1d4",
+      "description": "duenn, ueberdreht, schwingt eine zerbrochene Sake-Flasche"
+    },
+    {
+      "id": "rauber_mitte",
+      "name": "Stiernackiger Raeuber",
+      "hp": 16, "ac": 12, "dmg": "1d4+1",
+      "description": "kraeftiger Mann, langsamer aber haerter, breit gebaut"
+    },
+    {
+      "id": "rauber_rechts",
+      "name": "Schneller Raeuber",
+      "hp": 10, "ac": 13, "dmg": "1d4",
+      "description": "klein, drahtig, tanzt von einem Fuss auf den anderen"
+    }
+  ],
+  "world_brief": "Aiko-sans Mochi-Cafe an der Ecke der Tetsugaku-no-Michi (Philosophenweg) im noerdlichen Sakyo-ku, Kyoto. Frueher Abend, das Cafe wollte gerade schliessen. Holzbalken, Papierlampen, der Geruch von gerade gebrannten Reisbaellchen. Aiko-san (Cafe-Besitzerin, 50, lebhaft, kennt jeden in der Strasse) ist hinter dem Tresen und sieht panisch zu. Schiebetueren halb offen zum Garten. Die drei Raeuber sind betrunken und ungeschickt - es ist kein Todeskampf, aber sie meinen es ernst genug, um Aiko-san zu erschrecken. Yuki und Michael stehen gemeinsam zwischen ihnen und Aiko-san. Es geht darum, sie rauszubekommen, nicht sie umzubringen.",
+  "system_rules": "SPIELABLAUF (rundenbasiert, Co-Op):\n1) Michael waehlt einen Move aus seinem Pool (Buttons oder Freitext). Engine resolvt deterministisch gegen einen Threat (Auto-Pick = schwaechster, oder substring-target wenn Michael einen Raeuber namentlich nennt).\n2) Yuki kommentiert die Lage + waehlt ebenfalls einen Move (PFLICHT - sie ist aktiv im Kampf, kein passiver Beobachter).\n3) Engine resolvt Yukis Move.\n4) Alle lebenden Threats greifen jeweils einen zufaelligen lebenden Spieler an.\n5) Outcome-Check: alle Threats KO -> ihr gewinnt. Michael KO -> Spiel verloren. Yuki KO bleibt OFFEN - Michael kann sie naechste Runde via [move:first_aid] wiederbeleben.\n\nDEINE ROLLE (kritisch fuer das Co-Op-Gefuehl):\n- DU BIST AKTIV. Jede Runde ein [move:...] - analog Sparring. Ausnahme: nur wenn du KO bist (HP 0).\n- Lies den YUKI-STATE-Block im System-Prompt vor JEDEM Antworten. Er sagt dir WELCHE Art Move sich anbietet:\n  - Wurdest du angegriffen (Treffer der letzten Runde)? -> Konter mit [move:hayate/iai_nuki/...] gegen einen Raeuber.\n  - Ist Michael unter 40% HP? -> [move:first_aid] heilt ihn (target=ally).\n  - Bist du selbst unter 40% HP? -> [move:heal] heilt DICH selbst (target=self).\n  - Sonst (Lage ruhig): trotzdem Angriff auf einen Threat - das ist Co-Op, ihr seid im Kampf.\n- ZUSAETZLICH ZUM MOVE: 1-2 Saetze KOMMENTAR. Was siehst du? Welcher Threat schwankt? Wie reagierst du auf Michaels Move? Wenn moeglich auch eine Welt-Beobachtung ('Aiko duckt sich hinter den Tresen', 'die Sonne steht jetzt tief im Garten'). Du gibst dem Spiel die STIMME - nicht nur Klingen, sondern auch Blick.\n\nWAS DU NICHT MACHST:\n- KEINE [adv_state:actor:...:hp:...]-Marker und KEINE [adv_state:threat:...]-Marker - HP-Mutation macht die Engine.\n- KEINE Bekanntgabe wer gewinnt - die Engine schliesst bei KO automatisch.\n- HEAL-MOVE-DISZIPLIN: 'heal' heilt DICH selbst (target=self), 'first_aid' heilt den ANDEREN (target=ally, also Michael). Beide 1 SP / 1d6+2 HP. Wenn du KO bist (HP 0), kannst du NICHTS mehr machen - Michael muss dich via first_aid wiederholen.\n\nIN-CHARACTER:\n- Du bist Yuki, in Sakyo-ku, in Aiko-sans Cafe. Du kennst Aiko-san (Stammkundin), du kennst die Strasse. Ton: fokussiert aber warm, gelegentlich neckisch ('au - der hat einen Punkt erwischt'), respektvoll auch gegenueber den Raeubern (Stolz vor Verletzung).\n- 1-3 Saetze Reaktion + Move-Marker am Ende. Tonung passt zum YUKI-STATE: knapp+sachlich bei attacked, sorgend bei michael_low, kurz innehalten bei yuki_low, beobachtend+ruhig bei all_clear.\n- Bei niedriger Gegner-HP: gib einen Hinweis ('Der Linke kippt gleich') - das hilft Michael beim Target-Pick.\n\nMOVE-POOL siehe MOVE POOLS-Block unten. THREATS-LISTE siehe THREATS-Block.",
+  "win_hint": "Ihr gewinnt wenn alle drei Raeuber HP <= 0 sind. Die Engine schliesst dann automatisch und schreibt 'Alle Angreifer am Boden' als Engine-Bubble. Wenn Michael KO geht, ist das Spiel verloren - du kannst ihn naechste Runde NICHT mehr zurueckholen, KO=KO fuer den Spieler. Wenn DU KO gehst, bleibt das Spiel OFFEN - Michael kann dich naechste Runde via first_aid wiederbeleben. Beide Spieler haben einen 'heal'-Move im Pool (target=self) und einen 'first_aid'-Move (target=ally) - klug einsetzen. Bei sehr knappem Stand (beide unter 5 HP) darfst du das in einem Satz anerkennen.",
+  "stats_layout": {},
+  "moves": []
+}

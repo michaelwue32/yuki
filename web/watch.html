@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<!-- viewport-fit=cover + interactive-widget: Stolperfalle 21 (Soft-Keyboard/Notch).
+     Auf der runden Uhr brauchen wir kein Keyboard, schadet aber nicht. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#0b0d12">
+<title>Yuki ⌚</title>
+<link rel="icon" href="/favicon-32.png">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:rgba(18,22,32,.66); --txt:#eef1f6; --dim:#9aa3b2;
+    --accent:#ff8fb3; --accent2:#7fd1ff; --ok:#54d98c; --bad:#ff6b6b;
+    /* Runder Bildschirm: alles Wichtige in den erreichbaren Kreis. Ecken meiden. */
+    --inset:5%;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--txt);
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif; user-select:none;}
+  /* Stiller, randloser Yuki-Hintergrund (transparenter Sprite, Magenta gekeyt,
+     einmalig via PIL nach avatar/watch_bg.png; /avatar/* ist immutable gecacht). */
+  body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:url("/avatar/watch_bg.png") center / cover no-repeat;
+    opacity:.18;}
+  /* Kreis-Vignette, damit nichts in den abgeschnittenen Ecken klebt. */
+  body::after{content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,.55) 86%);}
+
+  /* Roter Aufnahme-Glow: flutet beim Halten fast den ganzen Screen, pulsierend.
+     Vom Mic-Knopf (unten) nach außen. Liegt über allem (pointer-events:none). */
+  #recGlow{position:fixed; inset:0; z-index:4; pointer-events:none; opacity:0;
+    transition:opacity .18s ease;
+    background:radial-gradient(circle at 50% 80%,
+      rgba(255,55,75,.70) 0%, rgba(255,45,65,.42) 38%, rgba(255,40,60,.15) 64%, transparent 82%);}
+  body.recording #recGlow{opacity:1; animation:recflood 1.05s ease-in-out infinite;}
+  @keyframes recflood{0%,100%{opacity:.6; transform:scale(1);}
+    50%{opacity:1; transform:scale(1.06);}}
+
+  .wrap{position:relative; z-index:2; height:100%; display:flex; flex-direction:column;
+    align-items:center; padding:var(--inset) var(--inset) 0;}
+
+  /* --- oben: Persona-Auswahl (companion-only), schmal + zentriert (Kreis-Rand) --- */
+  .top{flex:0 0 auto; width:100%; display:flex; justify-content:center; padding-top:3%;}
+  select#persona{
+    max-width:74vw; appearance:none; text-align:center; text-align-last:center;
+    background:var(--panel); color:var(--txt); border:1px solid rgba(255,255,255,.14);
+    border-radius:999px; padding:8px 18px; font-size:clamp(15px,5vmin,20px); outline:none;}
+
+  /* --- Mitte: Chat (breitestes Band des Kreises) --- */
+  /* Chat läuft über die volle Höhe bis ganz unten (hinter dem Dock) durch.
+     Großes padding-bottom = Freiraum, damit die letzte Nachricht über den
+     schwebenden Knöpfen landet statt dahinter zu verschwinden. */
+  #chat{flex:1 1 auto; width:100%; overflow-y:auto; overflow-x:hidden;
+    margin:6px 0 0; padding:6px 4px clamp(120px,40vmin,215px); scrollbar-width:none;
+    display:flex; flex-direction:column; gap:7px;}
+  #chat::-webkit-scrollbar{display:none;}
+  .bubble{max-width:96%; padding:9px 12px; border-radius:14px; font-size:clamp(16px,4.8vmin,20px);
+    line-height:1.42; word-wrap:break-word; white-space:pre-wrap;}
+  .bubble.you{align-self:flex-end; background:rgba(127,209,255,.16);
+    border:1px solid rgba(127,209,255,.30);}
+  .bubble.yuki{align-self:flex-start; background:var(--panel);
+    border:1px solid rgba(255,143,179,.28);}
+  .bubble .who{display:block; font-size:11px; color:var(--dim); margin-bottom:2px;}
+  .bubble.you .who{color:var(--accent2);} .bubble.yuki .who{color:var(--accent);}
+  .sysline{align-self:center; font-size:12px; color:var(--dim); padding:2px 8px;}
+
+  #status{min-height:16px; font-size:clamp(13px,4vmin,16px); color:var(--dim);
+    text-align:center; margin:0; text-shadow:0 1px 3px rgba(0,0,0,.8);}
+  #status.err{color:var(--bad);} #status.ok{color:var(--ok);}
+
+  /* --- unten: schwebendes Dock über dem Chat --- */
+  .bottomDock{position:fixed; left:0; right:0; bottom:0; z-index:3;
+    pointer-events:none;   /* Swipes gehen durch zum Chat */
+    display:flex; flex-direction:column; align-items:center;
+    gap:4px; padding:0 0 clamp(8px,4vmin,22px);}
+  .bottomDock .controls, .bottomDock button{pointer-events:auto;}
+  .controls{display:flex; gap:clamp(12px,5vmin,22px); align-items:center;
+    justify-content:center;}
+  .controls[hidden]{display:none;}
+
+  button{font-family:inherit; color:var(--txt); cursor:pointer; border:none;}
+  /* Mic: großer runder Daumen-Knopf – Größe skaliert mit dem Display (vmin),
+     mit Pixel-Untergrenze, damit er auf jeder Uhr fett treffbar bleibt. */
+  #mic{width:clamp(104px,40vmin,170px); height:clamp(104px,40vmin,170px);
+    border-radius:50%; font-size:clamp(16px,4.8vmin,21px); font-weight:600;
+    /* halbtransparenter Hintergrund -> Chat scheint leicht durch (Text bleibt deckend) */
+    background:radial-gradient(circle at 50% 35%, rgba(42,54,80,.72), rgba(22,27,39,.72));
+    border:3px solid rgba(255,143,179,.5); line-height:1.15;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    touch-action:manipulation;   /* kein Doppeltipp-Zoom / Gesten-Klau auf dem Knopf */
+    transition:transform .08s, box-shadow .15s;}
+  #mic:active{transform:scale(.95);}
+  #mic.rec{border-color:var(--bad);
+    box-shadow:0 0 0 7px rgba(255,107,107,.22); animation:pulse 1s infinite;}
+  #mic.busy{border-color:var(--accent2); opacity:.9;}
+  #mic:disabled{opacity:.5;}
+  /* Barge-In: waehrend Yuki redet ist der Knopf ein Stopp-Knopf (Tap = abbrechen).
+     Warmes Orange, trotz busy klickbar (nicht :disabled). */
+  #mic.speaking-cancel{border-color:#ff8a3d; opacity:1;
+    background:radial-gradient(circle at 50% 35%, rgba(120,70,20,.78), rgba(60,35,12,.78));}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 6px rgba(255,107,107,.18);}
+    50%{box-shadow:0 0 0 13px rgba(255,107,107,.05);}}
+  #replay{width:clamp(64px,24vmin,100px); height:clamp(64px,24vmin,100px);
+    border-radius:50%; font-size:clamp(24px,8vmin,34px);
+    background:rgba(18,22,32,.55); border:1px solid rgba(255,255,255,.16);}
+  #replay:disabled{opacity:.35;}
+  #replay.replaying{border-color:#ff8a3d; color:#ffb877;}   /* laeuft -> Stopp-Geste (Toggle) */
+
+  /* Bestätigungs-Reihe (✓/✗) ersetzt die Mic-Reihe nach STT */
+  #yes,#no{width:clamp(74px,30vmin,124px); height:clamp(74px,30vmin,124px);
+    border-radius:50%; font-size:clamp(30px,11vmin,46px); font-weight:700;}
+  #yes{background:rgba(84,217,140,.18); border:2px solid var(--ok); color:var(--ok);}
+  #no{background:rgba(255,107,107,.16); border:2px solid var(--bad); color:var(--bad);}
+</style>
+</head>
+<body>
+<div id="recGlow"></div>
+<div class="wrap">
+  <div class="top"><select id="persona" aria-label="Persona"></select></div>
+  <div id="chat"></div>
+</div>
+<!-- Schwebendes Dock über dem Chat: Knöpfe halbtransparent, Chat scheint durch.
+     Dock selbst fängt KEINE Swipes ab (pointer-events:none), nur die Knöpfe ->
+     Scrollen funktioniert überall, auch im Bereich unter/neben den Knöpfen. -->
+<div class="bottomDock">
+  <div id="status">Tippen zum Aktivieren</div>
+  <div class="controls" id="ctrlMic">
+    <button id="replay" disabled title="Wiederholen">↻</button>
+    <button id="mic">🎙<br>Sprechen</button>
+  </div>
+  <div class="controls" id="ctrlConfirm" hidden>
+    <button id="no" title="Verwerfen">✗</button>
+    <button id="yes" title="Senden">✓</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+// ============================================================================
+//  Yuki Watch-UI – schlanke Standalone-Seite für die Galaxy Watch (Wear OS,
+//  Samsung Internet). Nutzt dieselben Server-Endpunkte wie die Haupt-App
+//  (/personas /persona /stt /respond /tts_stream), aber OHNE Avatar/three.js,
+//  OHNE Capacitor, OHNE SSE. Bewusst minimal: kein Dauer-Wachhalten (Akku),
+//  kein Timer-Alarm auf der Uhr (Yuki darf Timer setzen – die tönen woanders).
+// ============================================================================
+const $ = s => document.querySelector(s);
+const chat = $("#chat"), statusEl = $("#status");
+const micBtn = $("#mic"), replayBtn = $("#replay");
+const ctrlMic = $("#ctrlMic"), ctrlConfirm = $("#ctrlConfirm");
+const personaSel = $("#persona");
+
+// Stabile Client-ID – SELBER localStorage-Key wie die Haupt-App, damit der
+// Server dieses Gerät konsistent erkennt (Origin-Routing der Timer etc.).
+const _CID_KEY = "yuki.client_id";
+let _cid = localStorage.getItem(_CID_KEY);
+if (!_cid) {
+  _cid = (crypto.randomUUID ? crypto.randomUUID()
+          : (Date.now() + "-" + Math.random().toString(36).slice(2)));
+  localStorage.setItem(_CID_KEY, _cid);
+}
+
+let audioCtx = null, micStream = null, recorder = null, chunks = [];
+let primed = false, busy = false, recStartMs = 0, recording = false;
+let lastAudioBuf = null, pendingText = "";
+let wakeSentinel = null;
+
+function setStatus(t, cls){ statusEl.textContent = t || ""; statusEl.className = cls || ""; }
+function setBusy(on, label){
+  busy = on;
+  micBtn.disabled = on;
+  micBtn.classList.toggle("busy", on);
+  if (!on) micBtn.classList.remove("speaking-cancel");   // Barge-In-State sicher abraeumen
+  if (label) micBtn.innerHTML = label;
+}
+// --- Barge-In: Yuki unterbrechen waehrend sie redet -------------------------
+// _replyAbort haelt den AbortController des laufenden Reply-Audios. enterSpeaking-
+// Cancel macht den Mic-Knopf trotz busy klickbar (als Stopp-Geste); cancelReply
+// bricht ab -> playReply resolved -> send-finally raeumt via setBusy(false) auf.
+let _replyAbort = null;
+function enterSpeakingCancel(){
+  micBtn.disabled = false;                 // trotz busy: Tap soll als Cancel durchgehen
+  micBtn.classList.remove("busy");
+  micBtn.classList.add("speaking-cancel");
+  micBtn.innerHTML = "✕<br>Stopp";
+}
+function cancelReply(){
+  micBtn.classList.remove("speaking-cancel");
+  if (_replyAbort){ try{ _replyAbort.abort(); }catch(_){} }
+}
+function addBubble(who, text){
+  const b = document.createElement("div");
+  b.className = "bubble " + (who === "Du" ? "you" : "yuki");
+  b.innerHTML = `<span class="who">${who}</span>`;
+  b.appendChild(document.createTextNode(text));
+  chat.appendChild(b);
+  chat.scrollTop = chat.scrollHeight;
+  return b;
+}
+function addSys(text){
+  const s = document.createElement("div"); s.className = "sysline"; s.textContent = text;
+  chat.appendChild(s); chat.scrollTop = chat.scrollHeight;
+}
+
+// --- Wake-Lock: Screen wach halten, SOLANGE die App benutzt wird ------------
+// Die Uhr dunkelt sonst nach ~10s ab und wirft die App nach ~13s raus (killt
+// auch laufende Turns -> "fetch failed"). Wir halten den Screen wach, ABER mit
+// Inaktivitäts-Timeout: nach IDLE_MS ohne Tippen/Reden darf die Uhr schlafen.
+// -> "ein paar Minuten für Rückfragen ok, dauerhaft keine Option".
+const IDLE_MS = 180000;            // 3 min
+let wakeWanted = false, idleTimer = null;
+async function acquireWake(){
+  if (!("wakeLock" in navigator) || wakeSentinel || document.hidden) return;
+  try{
+    wakeSentinel = await navigator.wakeLock.request("screen");
+    wakeSentinel.addEventListener?.("release", () => { wakeSentinel = null; });
+  }catch(_){ /* nicht unterstützt / Gesture nötig – kein Showstopper */ }
+}
+function releaseWake(){
+  if (wakeSentinel){ try{ wakeSentinel.release(); }catch(_){} wakeSentinel = null; }
+}
+// Bei jeder Interaktion (und während eines Turns): wach werden + Idle-Uhr neu stellen.
+function keepAwake(){
+  wakeWanted = true;
+  acquireWake();
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    wakeWanted = false; releaseWake();
+    setStatus("schläft – tippen zum Wecken");
+  }, IDLE_MS);
+}
+// System gibt den Lock beim Hidden frei -> beim Zurückkommen ggf. neu holen.
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) releaseWake();
+  else if (wakeWanted) acquireWake();
+});
+// Jeder Tap irgendwo hält die Uhr wach + setzt den Idle-Timer zurück.
+document.addEventListener("pointerdown", keepAwake, { passive:true });
+
+// --- Audio / Mikrofon -------------------------------------------------------
+async function unlockAudio(){
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === "suspended") await audioCtx.resume();
+}
+async function ensureMic(){
+  if (micStream) return micStream;
+  micStream = await navigator.mediaDevices.getUserMedia({
+    audio:{ echoCancellation:true, noiseSuppression:true, channelCount:1 }
+  });
+  return micStream;
+}
+
+async function startRecording(){
+  const stream = await ensureMic();
+  chunks = [];
+  recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  recorder.onstop = () => sendForTranscription();
+  recorder.start();
+  recStartMs = Date.now();
+  recording = true;
+  micBtn.classList.add("rec");
+  micBtn.innerHTML = micLabel();
+  document.body.classList.add("recording");
+  setStatus("● Aufnahme … nochmal tippen zum Senden");
+}
+// Aufnahme beenden + zur Erkennung schicken (zweiter Tap auf den Knopf).
+function finalizeStop(){
+  recording = false;
+  micBtn.classList.remove("rec");
+  document.body.classList.remove("recording");
+  micBtn.innerHTML = micLabel();
+  if (recorder && recorder.state !== "inactive") recorder.stop();   // -> onstop -> STT
+}
+
+async function sendForTranscription(){
+  const recMs = recStartMs ? (Date.now() - recStartMs) : 0;
+  const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+  // Kurzer Tap / Stille gar nicht erst hochladen (Whisper halluziniert sonst).
+  if (recMs < 400 || blob.size < 1200){ setStatus("zu kurz", "err"); return; }
+  setBusy(true, "Erkenne<br>…");
+  setStatus("");
+  try{
+    const fd = new FormData();
+    fd.append("audio", blob, "rec.webm");
+    // Sprach-Hint bewusst NICHT mitsenden -> Server-Auto-Detect (kein Pill-UI auf der Uhr).
+    const r = await fetch("/stt", { method:"POST", body:fd });
+    const j = await r.json();
+    if (!j.ok || !(j.text||"").trim()){ setStatus("nichts erkannt", "err"); setBusy(false, micLabel()); return; }
+    pendingText = j.text.trim();
+    showConfirm(pendingText);
+  }catch(e){
+    setStatus("STT-Fehler: " + e.message, "err"); setBusy(false, micLabel());
+  }
+}
+
+// --- Bestätigungs-Gate (scrollbar im Chat anzeigen, ✓ senden / ✗ verwerfen) -
+function showConfirm(text){
+  setBusy(false, micLabel());
+  addBubble("Du", text);
+  setStatus("Senden?");
+  ctrlMic.hidden = true; ctrlConfirm.hidden = false;
+}
+function hideConfirm(){ ctrlConfirm.hidden = true; ctrlMic.hidden = false; }
+
+$("#yes").addEventListener("click", () => { hideConfirm(); send(pendingText); });
+$("#no").addEventListener("click", () => {
+  hideConfirm(); setStatus("verworfen");
+  // letzte (verworfene) "Du"-Bubble wieder entfernen
+  const last = chat.querySelector(".bubble.you:last-of-type");
+  if (last) last.remove();
+});
+
+// --- Senden -> Antwort -> Sprechen ------------------------------------------
+async function send(text){
+  if (!text) return;
+  setBusy(true, "Yuki<br>denkt …");
+  setStatus("");
+  keepAwake();                       // Screen über den ganzen Turn wach halten
+  try{
+    const r = await fetch("/respond", {
+      method:"POST", headers:{ "Content-Type":"application/json" },
+      // watch:true -> Server unterdrückt Timer (Uhr kann nicht wecken) + nudged Yuki.
+      body: JSON.stringify({ text, client_id:_cid, watch:true })   // identity weg = Michael (Default)
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "Antwort fehlgeschlagen");
+    if (j.persona && j.persona !== personaSel.value) personaSel.value = j.persona;
+    addBubble("Yuki", j.reply || "…");
+    // Timer sind serverseitig für Watch-Turns hart unterdrückt (watch:true) – die
+    // Uhr kann nicht wecken, ein Timer wäre verwaist. Daher hier nichts zu tun.
+    setBusy(true, "Yuki<br>spricht …");
+    keepAwake();                     // langer Reply: Idle-Timer nicht ablaufen lassen
+    enterSpeakingCancel();           // Knopf wird zum Stopp-Knopf (Barge-In)
+    const played = await playReply(j);
+    replayBtn.disabled = !played;
+  }catch(e){
+    setStatus("Fehler: " + e.message, "err");
+  }finally{
+    setBusy(false, micLabel());
+    if (!statusEl.classList.contains("err")) setStatus("");
+  }
+}
+
+// --- TTS-Wiedergabe ---------------------------------------------------------
+function playBuffer(buf, opts){
+  return new Promise(res => {
+    const signal = opts && opts.signal;
+    if (signal && signal.aborted){ res(); return; }
+    const s = audioCtx.createBufferSource();
+    s.buffer = buf; s.connect(audioCtx.destination);
+    s.onended = res;
+    if (signal) signal.addEventListener("abort", () => { try{ s.stop(0); }catch(_){} }, { once:true });
+    s.start();
+  });
+}
+// Inline-WAV aus /respond (wenn TTS_STREAM_MOBILE aus ist) -> ein Roundtrip.
+async function playB64Wav(b64, opts){
+  const bin = atob(b64), len = bin.length, bytes = new Uint8Array(len);
+  for (let i=0;i<len;i++) bytes[i] = bin.charCodeAt(i);
+  lastAudioBuf = await audioCtx.decodeAudioData(bytes.buffer);
+  await playBuffer(lastAudioBuf, opts); return true;
+}
+// Gestreamtes int16-PCM von /tts_stream einmal komplett einsammeln, dann
+// als EIN Buffer abspielen (kein Echtzeit-Scheduler nötig – die Replies sind kurz).
+// opts.signal (Barge-In): bricht fetch + Reader + die laufende Wiedergabe ab.
+async function speak(text, opts){
+  const signal = opts && opts.signal;
+  let resp;
+  try{
+    resp = await fetch("/tts_stream", {
+      method:"POST", headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ text }), signal: signal || undefined
+    });
+  }catch(e){ if (e.name === "AbortError") return false; throw e; }
+  if (!resp.ok || !resp.body) return false;
+  const sr = parseInt(resp.headers.get("X-Sample-Rate") || "32000", 10) || 32000;
+  const reader = resp.body.getReader();
+  const parts = []; let total = 0;
+  try{
+    for(;;){ const { done, value } = await reader.read(); if (done) break; parts.push(value); total += value.length; }
+  }catch(e){ if (signal && signal.aborted) return false; throw e; }
+  if (signal && signal.aborted) return false;
+  if (!total) return false;
+  const all = new Uint8Array(total); let o = 0;
+  for (const p of parts){ all.set(p, o); o += p.length; }
+  const usable = all.length - (all.length % 2);
+  if (!usable) return false;
+  const i16 = new Int16Array(all.buffer, 0, usable >> 1);
+  const f32 = new Float32Array(i16.length);
+  for (let i=0;i<i16.length;i++) f32[i] = i16[i] / 32768;
+  const buf = audioCtx.createBuffer(1, f32.length, sr);
+  buf.copyToChannel(f32, 0);
+  lastAudioBuf = buf;
+  await playBuffer(buf, opts); return true;
+}
+async function playReply(j){
+  await unlockAudio();
+  _replyAbort = new AbortController();
+  const signal = _replyAbort.signal;
+  try{
+    if (j.has_audio && j.audio_b64) return await playB64Wav(j.audio_b64, { signal });
+    if (j.reply) return await speak(j.reply, { signal });
+  }catch(e){ setStatus("Audio: " + e.message, "err"); }
+  finally{ if (_replyAbort && _replyAbort.signal === signal) _replyAbort = null; }
+  return false;
+}
+// Replay als Toggle: erster Klick wiederholt, zweiter Klick (waehrend Wiedergabe)
+// bricht ab. Nutzt den playBuffer-signal (gleiches Muster wie der Barge-In).
+let _replaying = false;
+let _replayAbort = null;
+replayBtn.addEventListener("click", async () => {
+  if (_replaying) { if (_replayAbort) { try{ _replayAbort.abort(); }catch(_){} } return; }
+  if (!lastAudioBuf) return;
+  _replaying = true;
+  _replayAbort = new AbortController();
+  const signal = _replayAbort.signal;
+  replayBtn.classList.add("replaying");
+  replayBtn.textContent = "■";
+  try{ await unlockAudio(); await playBuffer(lastAudioBuf, { signal }); }
+  catch(e){ setStatus("Audio: " + e.message, "err"); }
+  finally{
+    _replaying = false; _replayAbort = null;
+    replayBtn.classList.remove("replaying");
+    replayBtn.textContent = "↻";
+  }
+});
+
+// --- Mic: TAP-TO-TOGGLE (tippen = an, nochmal tippen = senden) --------------
+// Halten-zum-Sprechen ist auf der Uhr unbrauchbar: bei gehaltenem Finger feuert
+// das System nach ~1-2s ein pointercancel (Gesten-Erkennung) -> Aufnahme bricht
+// von selbst ab. Tap-Toggle umgeht das komplett (kein gehaltener Finger nötig).
+function micLabel(){ return recording ? "■<br>Senden" : "🎙<br>Sprechen"; }
+micBtn.addEventListener("click", async () => {
+  // Barge-In: redet Yuki gerade, stoppt der Tap sie (Knopf ist dann Stopp-Knopf).
+  if (micBtn.classList.contains("speaking-cancel")){ cancelReply(); return; }
+  if (busy) return;
+  if (!primed){
+    // Erster Tap: Audio + Mic-Permission holen (Browser will eine User-Geste).
+    try{ await unlockAudio(); await ensureMic(); primed = true;
+         micBtn.innerHTML = micLabel(); setStatus("Tippen zum Sprechen", "ok"); }
+    catch(err){ setStatus("Mikrofon nicht freigegeben", "err"); }
+    return;
+  }
+  if (!recording){
+    try{ await unlockAudio(); await startRecording(); }
+    catch(err){ setStatus("Mic-Fehler: " + err.message, "err"); }
+  } else {
+    finalizeStop();
+  }
+});
+
+// --- Personas (NUR companion-Gruppe – kein tutor/kyoto/secretary/berater) ----
+async function loadPersonas(){
+  try{
+    const r = await fetch("/personas"); const j = await r.json();
+    if (!j.ok) return;
+    personaSel.innerHTML = "";
+    for (const p of j.personas){
+      if ((p.group || "companion") !== "companion") continue;   // Spezial-Personas raus
+      const o = document.createElement("option");
+      o.value = p.key; o.textContent = p.name;
+      if (p.key === j.current) o.selected = true;
+      personaSel.appendChild(o);
+    }
+    // Falls die aktive Persona eine Spezial-Persona ist (am Handy gewählt), ist
+    // sie hier nicht in der Liste -> erste Companion vorwählen, NICHT umschalten.
+    if (!personaSel.value && personaSel.options.length) personaSel.selectedIndex = 0;
+  }catch(_){ /* Dropdown bleibt leer – kein Showstopper */ }
+}
+personaSel.addEventListener("change", async () => {
+  const key = personaSel.value;
+  try{ await fetch("/persona", { method:"POST", headers:{ "Content-Type":"application/json" },
+                                 body: JSON.stringify({ key }) });
+       setStatus("Persona: " + personaSel.options[personaSel.selectedIndex].text, "ok"); }
+  catch(_){ setStatus("Persona-Wechsel fehlgeschlagen", "err"); }
+});
+
+loadPersonas();
+</script>
+</body>
+</html>

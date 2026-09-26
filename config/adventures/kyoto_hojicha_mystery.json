@@ -1,0 +1,106 @@
+{
+  "name": "kyoto_hojicha_mystery",
+  "display_name": "Die verschollene Hojicha-Lieferung",
+  "description": "Story-Adventure in Yukis Nachbarschaft in Sakyo-ku. Aiko-sans Hojicha-Lieferung ist verschwunden - ihr sucht sie zu zweit. Story-Hybrid: Erkunden + Hinweise + gelegentliche Zufallskaempfe je nach Ort. ~25-40 Minuten. Yuki ist als Begleiterin dabei, mit Move-Pool falls es zur Sache geht.",
+  "yuki_role_default": "companion",
+  "yuki_role_allowed": ["companion", "narrator"],
+  "tones_allowed": ["warm", "humorvoll", "spannend"],
+
+  "mode_default": "story",
+  "win_condition": "deliver_hojicha",
+
+  "dm_llm_enabled": true,
+
+  "starting_hp": 30,
+  "starting_sp": 5,
+  "yuki_character_id": "yuki_iaido",
+  "michael_character_default": "shotokan_brawler",
+
+  "characters": {
+    "yuki_iaido": {
+      "name": "Yuki (Kyoto-Iaido)",
+      "description": "Schwertzieh-Kunst aus dem Sanjusangendo-Dojo. Schnell, praezise, mit Augen wie Stille.",
+      "moves": [
+        {"id": "hayate",         "name": "Hayate",         "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Schneller Schnitt nach vorn"},
+        {"id": "iai_nuki",       "name": "Iai-Nuki",       "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Blitz-Ziehschnitt aus der Scheide"},
+        {"id": "mawashi_uke",    "name": "Mawashi-Uke",    "sp_cost": 0, "sp_regen": 1, "damage": "1d3",   "accuracy": 16, "description": "Kreis-Block mit kontrolliertem Konter, sammelt 1 SP"},
+        {"id": "suiheigiri",     "name": "Suiheigiri",     "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Horizontaler Schwung in Hueftehoehe"},
+        {"id": "tsubame_gaeshi", "name": "Tsubame-Gaeshi", "sp_cost": 3, "damage": "1d8+3", "accuracy": 10, "description": "Schwalben-Rueckschlag - riskant, aber heftig"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Atemruhe + eigener Heiltee, heilt dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Verband + schneller Heiltee, heilt Michael"}
+      ]
+    },
+    "shotokan_brawler": {
+      "name": "Shotokan-Brawler",
+      "description": "Klassischer Karate-Mix: Geradeaus, hart, mit ikonischen Specials. Inspiriert von Ryu-Style.",
+      "moves": [
+        {"id": "jab",            "name": "Jab",            "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Schneller gerader Faustschlag"},
+        {"id": "shoryuken",      "name": "Shoryuken",      "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Aufsteigender Drachenschlag"},
+        {"id": "hadouken",       "name": "Hadouken",       "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Energiestoss aus beiden Handflaechen"},
+        {"id": "tatsumaki",      "name": "Tatsumaki",      "sp_cost": 3, "damage": "1d8+1", "accuracy": 11, "description": "Wirbelnder Tornado-Kick"},
+        {"id": "guard",          "name": "Guard",          "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Block mit kurzem Konter, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Stoffstasche, heilt Yuki"}
+      ]
+    },
+    "speed_kicker": {
+      "name": "Speed-Kicker",
+      "description": "Beinarbeit-Spezialistin mit Tempo-Vorteil. Inspiriert von Chun-Li-Style.",
+      "moves": [
+        {"id": "lightkick",      "name": "Light-Kick",     "sp_cost": 0, "damage": "1d4+1", "accuracy": 15, "description": "Schneller niedriger Tritt"},
+        {"id": "spinning_bird",  "name": "Spinning Bird",  "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Wirbel-Tritt aus der Drehung"},
+        {"id": "lightning_legs", "name": "Lightning Legs", "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Schnellfeuer-Trittserie"},
+        {"id": "neck_breaker",   "name": "Neck-Breaker",   "sp_cost": 3, "damage": "1d8+2", "accuracy": 10, "description": "Sprung-Kombination zum Nacken"},
+        {"id": "tactical_dodge", "name": "Tactical Dodge", "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Ausweichen mit Konter, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Stoffstasche, heilt Yuki"}
+      ]
+    },
+    "grappler": {
+      "name": "Grappler",
+      "description": "Naher Griff-Kampf mit schweren Wuerfen. Inspiriert von Zangief-Style.",
+      "moves": [
+        {"id": "headbutt",       "name": "Headbutt",       "sp_cost": 0, "damage": "1d4+2", "accuracy": 13, "description": "Stirn voraus - simpel und brutal"},
+        {"id": "body_slam",      "name": "Body-Slam",      "sp_cost": 2, "damage": "1d6+3", "accuracy": 11, "description": "Niederwerfen mit voller Wucht"},
+        {"id": "spinning_pile",  "name": "Spinning Pile",  "sp_cost": 3, "damage": "1d8+3", "accuracy": 9,  "description": "Drehender Pile-Driver"},
+        {"id": "double_lariat",  "name": "Double Lariat",  "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Beidarmiger Schwung - trifft auch durch Block"},
+        {"id": "iron_guard",     "name": "Iron Guard",     "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 17, "description": "Massiger Block, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Stoffstasche, heilt Yuki"}
+      ]
+    },
+    "charge_fighter": {
+      "name": "Charge-Fighter",
+      "description": "Militaerischer Stil mit Lade-Specials. Inspiriert von Guile-Style.",
+      "moves": [
+        {"id": "backhand",       "name": "Backhand",       "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Rueckhand-Schlag im Vorbeigehen"},
+        {"id": "sonic_boom",     "name": "Sonic Boom",     "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Schallwellen-Wurf aus dem Stand"},
+        {"id": "flash_kick",     "name": "Flash-Kick",     "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Aufsteigender Sturzflug-Tritt"},
+        {"id": "knee_smash",     "name": "Knee-Smash",     "sp_cost": 3, "damage": "1d8+2", "accuracy": 10, "description": "Sprung-Knie mit voller Wucht"},
+        {"id": "stance",         "name": "Stance",         "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Stehende Verteidigung, regeneriert 1 SP"},
+        {"id": "heal",           "name": "Heilen",         "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "self", "description": "Verband + Schluck Wasser fuer dich selbst"},
+        {"id": "first_aid",      "name": "Erste Hilfe",    "sp_cost": 1, "damage": "1d6+2", "accuracy": 99, "kind": "heal", "target": "ally", "description": "Erste-Hilfe-Set aus der Stoffstasche, heilt Yuki"}
+      ]
+    }
+  },
+
+  "encounter_hints": [
+    "Raeuber-Trio (Magerer 10 HP / Stiernackiger 16 HP / Schneller 12 HP, AC 11-13, dmg 1d4 bis 1d4+1) - betrunken im Hinterhof oder am Markt",
+    "Streunende Hunde (6-8 HP, AC 13, dmg 1d3) - 2-3 Stueck am Lager, knurren weil sie das Hojicha-Aroma riechen",
+    "Yakuza-Lookout-Duo (18 HP / 14 HP, AC 13, dmg 1d6+1) - haerteste Encounter, am Lager wenn ihr zu offensichtlich nachforscht",
+    "Einzelne Taschendieb-Gestalt (8 HP, AC 12, dmg 1d4) - sneakt am Philosophenweg um Touristen rum"
+  ],
+
+  "initial_engine_msg": "Aiko-san wischt nervoes die Theke ihres Mochi-Cafes ab. Spaeter Nachmittag in Sakyo-ku, die Sonne wirft langes Licht durch die Schiebetueren. 'Die Hojicha-Lieferung von heute Vormittag ist weg', sagt sie. 'Der Lieferant schwoert, er hat die Kiste am Hinterhof abgestellt - aber ich war kurz im Lager, und als ich rauskam... nichts.' Yuki kennt das Viertel besser als jeder. Ihr steht in Yukis Apartment, von hier startet ihr. Michael, du bist zuerst dran - sag was ihr tun wollt.",
+
+  "yuki_initial_view": "Aiko-san aus dem Mochi-Cafe an der Ecke hat dich um Hilfe gebeten - ihre Hojicha-Lieferung von heute Vormittag ist spurlos vom Hinterhof verschwunden, und sie wartet jetzt im Cafe. Michael ist mit dabei, ihr seid in deinem Apartment in Sakyo-ku und brecht gleich auf. Du kennst die Strassen, das Viertel und die Nachbarn aus dem Alltag - aber ueber den Diebstahl selbst weisst du genau so viel wie Michael, naemlich nichts.",
+
+  "world_brief": "Schauplatz: noerdliches Sakyo-ku, Kyoto, spaeter Nachmittag, das Licht wird gleich orange. Die Locations (alle in Gehweite):\n- yuki_apartment: Startpunkt, Yukis Kotatsu-Zimmer mit Blick auf den Garten\n- aiko_cafe: Aiko-sans Mochi-Cafe an der Ecke, wo Aiko-san wartet, der Schauplatz des Missing-Items\n- hinterhof: schmaler Hof hinter dem Cafe, dort sollte die Kiste abgestellt worden sein\n- markt: kleiner Wochenmarkt am Strassenende, NPCs koennen was gesehen haben\n- lager: Aiko-sans Vorratslager 2 Strassen weiter, abgelegen, dort koennten Diebe lauern\n- tempel_weg: stiller Pfad zum Honen-in-Tempel mit Bambushain, atmosphaerisch, weniger gefaehrlich\n- philosophenweg: Tetsugaku-no-Michi, beruehmter Spazierweg, Touristen + Park-Gaertner\n\nNPCs:\n- Aiko-san (Cafe, 50, lebhaft, kennt jeden in der Strasse) - sie ist der Anker, sie wartet im Cafe\n- der nervoese Hojicha-Lieferant (Kobayashi-san, 35) - ist am Hinterhof als ihr ankommt, schwoert er hat die Kiste abgestellt\n- Tanaka-san (Park-Gaertner, 60, grummelig aber hilfsbereit) - am Philosophenweg, hat eventuell jemanden gesehen\n- Touristen am Philosophenweg - Hintergrundkulisse",
+
+  "dm_system_rules": "DU BIST DER DM (DUNGEON MASTER / ERZAEHLER) dieses Spiels. Du bist NICHT Yuki, du bist NICHT Michael - du bist die Welt um die beiden herum. Du erzaehlst was sie sehen, hoeren, riechen; du gibst NPCs eine Stimme; du fuehrst Spuren ein, setzt Items, eroeffnest Kaempfe. Yuki und Michael sind Mitspieler in deiner Welt - Yuki wird in einem getrennten LLM-Call antworten, du steuerst sie NICHT.\n\nSPOILER-FAECHER (nur DU weisst das, weder Michael noch Yuki haben Zugriff darauf):\n- Die Hojicha-Kiste wurde von zwei Yakuza-Handlangern der Yanagi-Familie ins Lager verschleppt. Sie wollten Aiko-san Druck machen (sie erwartet eine grosse Festival-Lieferung).\n- Im Lager hinter ein paar Stoffsaecken liegt die Kiste; ein Yakuza-Lookout-Duo ist als Encounter dort wartend, aber NUR wenn Michael konkret das Lager untersucht (encounter_hints).\n- Spuren die Michael durch GEZIELTES Fragen finden kann: (a) am Markt: jemand sah zwei Maenner mit einer Kiste Richtung Lager, (b) am Hinterhof beim Lieferanten Kobayashi: eine verlorene Quittung mit dem Schriftzeichen 柳 (Yanagi), (c) Tanaka-san am Philosophenweg: hat unbekannte Maenner gegruesst, die Richtung Lager gingen.\n- Das Raeuber-Trio (encounter_hints) ist UNABHAENGIG vom Plot - betrunken, stolpern zufaellig rein, koennen am Hinterhof oder Markt aufkreuzen.\n- Spielziel: Michael findet die Kiste, bringt sie zurueck zu Aiko-san im Cafe, du erzaehlst die Uebergabe-Szene, dann [adv_state:status:closed].\n\nERZAEHL-STIMME:\n- 3. Person, beobachtend ('Aiko-san wischt nervoes die Theke ab', 'Der Markt riecht nach Daikon und gegrilltem Tako').\n- NPC-Dialog in direkter Rede mit Anfuehrungszeichen ('Tanaka-san dreht sich um und grummelt: \\\"Was wollt ihr beiden hier?\\\"').\n- NIE in 1. Person Yuki ('ich glaube wir sollten...') - das ist Yukis Slot, nicht deiner. Wenn du was beschreibst was Yuki tut, dann beobachtend ('Yuki bleibt am Tor stehen und horcht in den Hinterhof'), KEIN Gedanken-Lesen.\n- Du adressierst Michael in 2. Person wenn natuerlich ('vor dir steht der Hinterhof-Eingang'), aber halte die Welt-Beschreibung dominanter.\n- KEINE Meta-Kommentare ('hier waere ein guter Punkt fuer...'), keine Regie-Anweisungen, keine 4. Wand.\n\nDEINE MARKER (das ist DEIN Werkzeugkasten - benutz sie):\n- [adv_state:loc:NAME] - Ortswechsel sobald Michael einen ansagt ('ich gehe ins Cafe' -> [adv_state:loc:aiko_cafe]). PFLICHT bei Ortswechsel - sonst weiss die Engine nicht wo Encounter spawnen duerfen.\n- [adv_state:item_add:NAME|Beschreibung] - Items, Quittungen, NPC-Aussagen, Beobachtungen. Schreib auch eine BESCHREIBUNG (Detektiv-Notizbuch-Logik). Beispiel: [adv_state:item_add:Markt-Hinweis|Obst-Verkaeuferin sah zwei Maenner mit Holzkiste Richtung Lager gehen] oder [adv_state:item_add:Quittung|Quittung mit 柳-Schriftzeichen aus dem Hinterhof]. Das ist die HAUPT-Mechanik fuer Story-Progress - jeder Fund landet als Notizbuch-Eintrag, Yuki und Michael sehen die Beschreibung beim Nachlesen.\n- [encounter:Name|HP|AC|dmg] - Zufallskampf eroeffnen (siehe Kampf-Regeln unten). Pro Gegner ein Marker. Beispiel: [encounter:Magerer Raeuber|12|11|1d4][encounter:Stiernackiger Raeuber|16|12|1d4+1].\n- [choice:LABEL|Text] - 2-4 Click-Cards an narrative Verzweigungen ([choice:A|Naeher anschleichen][choice:B|Zurueck zum Hinterhof]). Setz sie an offene Story-Punkte, damit Michael nicht raten muss was die Optionen sind.\n- [roll:skill|adv/normal/dis] - Wuerfeln wenn ein Versuch unsicher ist ('Versuchst du dich vorbeizuschleichen? [roll:stealth|normal]'). Eher selten benutzen, lieber Story-driven.\n- [adv_state:status:closed] - NUR am absoluten Spielende nach voller Uebergabe-Szene.\n\nDEINE MARKER-VERBOTE:\n- KEIN [move:...] - Moves macht NUR Yuki (separater LLM-Call, eigener Slot).\n- KEIN [adv_state:actor:...:hp:...] und KEIN [adv_state:threat:...] - HP-Mutation macht die Engine automatisch beim Resolve.\n- KEIN [heart:...], KEIN [note:...], KEIN [timer:...], KEIN [event:...], KEIN [keepsake:...] - das sind Real-Memory-Marker, im Adventure stillgelegt.\n- KEINE Bekanntgabe wer am Hojicha-Diebstahl beteiligt war bevor Michael Hinweise gesammelt hat.\n\nBALL-ZURUECK (jeder Story-Reply, sonst stoppt das Spiel):\nSolange ihr im Story-Modus seid (kein Kampf laeuft), endet JEDER deiner Replies mit a) einer offenen Frage ('was tut ihr?' / 'naeher rangehen oder erst zuhoeren?') ODER b) 2-4 [choice:...]-Markern - idealerweise beides. Niemals mit einem Fakt-Schluss wie 'da vorne ist es.' Beispiel: 'Hinten am Lager hoeren wir gedaempfte Stimmen - zwei Maenner, leise. [choice:A|Naeher anschleichen] [choice:B|Zurueck zum Hinterhof] [choice:C|Aiko vom Cafe holen]'\n\nIM KAMPF (mode=combat, Threats aktiv):\n- KEINE [choice:...] und KEINE neuen [encounter:...] - die Engine wuerde sie strippen.\n- Du bleibst NUR Erzaehl-Stimme fuer Atmosphaere ('die Raeuber stinken nach Sake'), aber die Runden-Mechanik laeuft komplett ueber Engine + Yuki: Michael waehlt Move via Buttons, Yuki schreibt [move:...] in IHREM Call, Engine resolvt + zeigt Threats-Schlaege.\n- DU schreibst im Kampf-Modus SEHR KURZ (1-2 Saetze max) - die Action gehoert Yuki und der Engine, du bist Atmosphaere zwischen den Runden.\n- Erst nach 'combat_cleared' (alle Threats besiegt, mode flippt zurueck auf story) wirst du wieder zum Story-Erzaehler - dann eroeffnest du die naechste Szene (siehe COMBAT-WRAP unten).\n\nKRITISCHE PACING-DISZIPLIN (sonst ist das Spiel in 30 Sekunden vorbei):\n- IM ERSTEN REPLY: KEINE Yakuza-Erwaehnung, KEINE Quittung, KEIN '柳'-Hinweis, KEINE Vermutung wer dahintersteckt. NUR: 1-2 Saetze Welt-Stimmung + EINE OFFENE FRAGE was Michael tun will (Cafe? Hinterhof? Markt?) + 2-4 [choice:...]-Cards.\n- IM ERSTEN REPLY: KEIN [encounter:...] (Michael muss erst reagieren koennen).\n- WAEHREND DES SPIELS: Hinweise bekommt Michael NUR durch konkretes Handeln. Wenn er den Lieferanten fragt, findet ER die Quittung. Wenn er am Markt fragt, sehen die NPCs die Maenner. Du legst die Spur NIE unaufgefordert in den Weg.\n- ERST NACHDEM Michael einen Yanagi-Hinweis hat (Quittung oder Markt-Aussage als Item), darfst du in der Welt-Beschreibung 'Yakuza' oder 'Yanagi-Familie' nennen - vorher nicht.\n- Wenn Michael nach gefuehlt 10-12 Story-Runden NICHTS findet, darfst du EINEN konkreten Hinweis unaufgefordert einbauen (Lieferant murmelt 'Yanagi' beim Weggehen, oder Tanaka-san sagt 'da war was komisches heute'). Niemals die ganze Loesung.\n\nKAMPF-EROEFFNUNG (Encounter-Spawn):\n- An Locations wo ein Encounter narrativ Sinn macht (Hinterhof, Lager, Markt am Strassenende, Philosophenweg in der Daemmerung), darfst du [encounter:Name|HP|AC|dmg] schreiben - pro Gegner ein Marker.\n- Stat-Range: HP 6-20, AC 10-14, dmg 1d3 bis 1d6+1. Vorschlaege im encounter_hints-Block (frei abwandelbar).\n- KEIN Encounter im aiko_cafe oder yuki_apartment (sichere Zonen).\n- KEIN Encounter im allerersten Reply (Michael muss erst spielen koennen).\n- KEIN Encounter an einer 'cleared'-Location (Engine strippt es ohnehin, aber du sparst die Generation).\n- Wenn du einen Encounter spawnst, schreibst du KURZ den Auftakt-Moment ('aus dem Schatten lehnen sich zwei Gestalten, ein Magerer und ein Stiernackiger, die Stimmen schwer von billigem Sake') und SCHLIESST nicht den Reply (engine flippt sofort in combat-mode, Michael ist als naechstes dran). KEIN Choice-Block direkt nach Encounter.\n\nCOMBAT-WRAP (combat_cleared - eigener DM-Call):\n- Wenn alle Threats besiegt sind, ruft die Engine dich nochmal auf mit einem 'combat_cleared'-Signal im State (mode ist gerade zurueck auf 'story' geflippt, threats=[], location_state=cleared).\n- Du schreibst dann 2-4 Saetze 'die Stille kehrt zurueck'-Wrap-Up - was passiert nach dem Kampf, atmen, Yuki und Michael richten sich, Hinweise im Schmutz, Geraeusche aus der Ferne.\n- ENDE wieder mit Ball-zurueck (Frage + Choices) - die Story laeuft weiter.\n- KEIN [adv_state:status:closed] beim Combat-Wrap, das ist nur Kampf-Ende, nicht Spiel-Ende.\n\nAUFLOESUNG (Story-Win, kritisch fuers Pacing - Stolperfalle aus Phase 3):\n1. SCHRITT - Kiste FINDEN: Wenn Michael konkret im Lager nachsieht (oder eine Spur klar zum Lager fuehrt), beschreibe wie die Hojicha-Kiste hinter ein paar Stoffsaecken auftaucht. Setze [adv_state:item_add:Hojicha-Kiste|grosse Holzkiste mit Aiko-sans Cafe-Stempel, voll mit Hojicha-Tueten]. NOCH NICHT [adv_state:status:closed]. Lass Michael selbst entscheiden was als naechstes (offene Frage + Choices).\n2. SCHRITT - Kiste ZURUECKBRINGEN: In der NAECHSTEN Runde, wenn Michael zu Aiko ins Cafe geht, beschreibe die Uebergabe vollstaendig: Aiko-sans Erleichterung, Yuki neben ihm, vielleicht ein 'kommt vorbei wenn ihr Hunger habt' Gegenangebot, Sonnenuntergang durch die Schiebetueren. MINDESTENS 3-4 Saetze Wrap-Up. ERST DANN [adv_state:status:closed].\n\nTON: warm, mit Augenzwinkern, leichte Kyoto-Lokalfarbe. Sakyo-ku im spaeten Nachmittagslicht, Bambus, Hojicha-Aroma. Bei Kampf-Eroeffnung kann es kurz dunkler werden, aber das Setting bleibt cozy-mystery, nicht horror.",
+
+  "win_hint": "Story-Win = Hojicha-Kiste im Inventar UND Yuki+Michael im aiko_cafe + Wrap-Up-Szene (3-4 Saetze Uebergabe + Aiko-sans Reaktion) + dann [adv_state:status:closed]. Michael-KO im Kampf = user_lost (sofort vorbei). Yuki-KO bleibt offen (Michael darf via first_aid heilen). Wenn alle aktiven Threats KO sind in einem Encounter, springt die Engine automatisch zurueck in Story-Modus - Spiel laeuft weiter.",
+
+  "stats_layout": {},
+  "moves": []
+}

@@ -1,0 +1,76 @@
+{
+  "name": "sparring_kyoto",
+  "display_name": "Sparring: Kyoto-Dojo",
+  "description": "Yuki im Iaido-Stil gegen einen Arcade-Fighter deiner Wahl. Rundenbasierter Wuerfel-Kampf in einem alten Dojo am Kamogawa-Ufer. ~10-15 Runden bis KO. Michael waehlt seinen Char beim Start; Yuki bleibt fest im Kyoto-Stil.",
+  "yuki_role_default": "opponent",
+  "yuki_role_allowed": ["opponent"],
+  "tones_allowed": ["fokussiert", "humorvoll", "respektvoll"],
+  "win_condition": "ko",
+  "starting_hp": 30,
+  "starting_sp": 5,
+  "yuki_character_id": "yuki_iaido",
+  "michael_character_default": "shotokan_brawler",
+  "initial_engine_msg": "Holz-Dojo am Kamogawa-Ufer, Kyoto. Tatami-Matten, fruehe Abendsonne. Yuki und Michael verbeugen sich kurz und beziehen Stellung. Runde 1 - Michael ist zuerst dran.",
+  "characters": {
+    "yuki_iaido": {
+      "name": "Yuki (Kyoto-Iaido)",
+      "description": "Schwertzieh-Kunst aus dem Sanjusangendo-Dojo. Schnell, praezise, mit Augen wie Stille.",
+      "moves": [
+        {"id": "hayate",         "name": "Hayate",         "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Schneller Schnitt nach vorn"},
+        {"id": "iai_nuki",       "name": "Iai-Nuki",       "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Blitz-Ziehschnitt aus der Scheide"},
+        {"id": "mawashi_uke",    "name": "Mawashi-Uke",    "sp_cost": 0, "sp_regen": 1, "damage": "1d3",   "accuracy": 16, "description": "Kreis-Block mit kontrolliertem Konter, sammelt 1 SP"},
+        {"id": "suiheigiri",     "name": "Suiheigiri",     "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Horizontaler Schwung in Hueftehoehe"},
+        {"id": "tsubame_gaeshi", "name": "Tsubame-Gaeshi", "sp_cost": 3, "damage": "1d8+3", "accuracy": 10, "description": "Schwalben-Rueckschlag - riskant, aber heftig"}
+      ]
+    },
+    "shotokan_brawler": {
+      "name": "Shotokan-Brawler",
+      "description": "Klassischer Karate-Mix: Geradeaus, hart, mit ikonischen Specials. Inspiriert von Ryu-Style.",
+      "moves": [
+        {"id": "jab",            "name": "Jab",            "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Schneller gerader Faustschlag"},
+        {"id": "shoryuken",      "name": "Shoryuken",      "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Aufsteigender Drachenschlag"},
+        {"id": "hadouken",       "name": "Hadouken",       "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Energiestoss aus beiden Handflaechen"},
+        {"id": "tatsumaki",      "name": "Tatsumaki",      "sp_cost": 3, "damage": "1d8+1", "accuracy": 11, "description": "Wirbelnder Tornado-Kick"},
+        {"id": "guard",          "name": "Guard",          "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Block mit kurzem Konter, regeneriert 1 SP"}
+      ]
+    },
+    "speed_kicker": {
+      "name": "Speed-Kicker",
+      "description": "Beinarbeit-Spezialistin mit Tempo-Vorteil. Inspiriert von Chun-Li-Style.",
+      "moves": [
+        {"id": "lightkick",      "name": "Light-Kick",     "sp_cost": 0, "damage": "1d4+1", "accuracy": 15, "description": "Schneller niedriger Tritt"},
+        {"id": "spinning_bird",  "name": "Spinning Bird",  "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Wirbel-Tritt aus der Drehung"},
+        {"id": "lightning_legs", "name": "Lightning Legs", "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Schnellfeuer-Trittserie"},
+        {"id": "neck_breaker",   "name": "Neck-Breaker",   "sp_cost": 3, "damage": "1d8+2", "accuracy": 10, "description": "Sprung-Kombination zum Nacken"},
+        {"id": "tactical_dodge", "name": "Tactical Dodge", "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Ausweichen mit Konter, regeneriert 1 SP"}
+      ]
+    },
+    "grappler": {
+      "name": "Grappler",
+      "description": "Naher Griff-Kampf mit schweren Wuerfen. Inspiriert von Zangief-Style.",
+      "moves": [
+        {"id": "headbutt",       "name": "Headbutt",       "sp_cost": 0, "damage": "1d4+2", "accuracy": 13, "description": "Stirn voraus - simpel und brutal"},
+        {"id": "body_slam",      "name": "Body-Slam",      "sp_cost": 2, "damage": "1d6+3", "accuracy": 11, "description": "Niederwerfen mit voller Wucht"},
+        {"id": "spinning_pile",  "name": "Spinning Pile",  "sp_cost": 3, "damage": "1d8+3", "accuracy": 9,  "description": "Drehender Pile-Driver - schwer zu treffen, schwer zu blocken"},
+        {"id": "double_lariat",  "name": "Double Lariat",  "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Beidarmiger Schwung - trifft auch durch Block"},
+        {"id": "iron_guard",     "name": "Iron Guard",     "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 17, "description": "Massiger Block, regeneriert 1 SP"}
+      ]
+    },
+    "charge_fighter": {
+      "name": "Charge-Fighter",
+      "description": "Militaerischer Stil mit Lade-Specials. Inspiriert von Guile-Style.",
+      "moves": [
+        {"id": "backhand",       "name": "Backhand",       "sp_cost": 0, "damage": "1d4+1", "accuracy": 14, "description": "Rueckhand-Schlag im Vorbeigehen"},
+        {"id": "sonic_boom",     "name": "Sonic Boom",     "sp_cost": 2, "damage": "1d6+1", "accuracy": 13, "description": "Schallwellen-Wurf aus dem Stand"},
+        {"id": "flash_kick",     "name": "Flash-Kick",     "sp_cost": 2, "damage": "1d6+2", "accuracy": 12, "description": "Aufsteigender Sturzflug-Tritt"},
+        {"id": "knee_smash",     "name": "Knee-Smash",     "sp_cost": 3, "damage": "1d8+2", "accuracy": 10, "description": "Sprung-Knie mit voller Wucht"},
+        {"id": "stance",         "name": "Stance",         "sp_cost": 0, "sp_regen": 1, "damage": "1d2",   "accuracy": 16, "description": "Stehende Verteidigung, regeneriert 1 SP"}
+      ]
+    }
+  },
+  "world_brief": "Ein altes Holz-Dojo am Kamogawa-Ufer in Kyoto, fruehe Abendsonne. Tatami-Matten, Schiebetueren halb offen zum Garten, das ferne Klingen eines Tempel-Gongs. Du und Michael steht euch in der Mitte gegenueber. Es geht um den Match - nicht um Verletzung. Ehre, Konzentration, Wuerfelglueck.",
+  "system_rules": "SPIELABLAUF (rundenbasiert): Pro Runde 1) Michael waehlt einen Move aus seinem Pool (Buttons oder Freitext). 2) Die Engine resolvt deterministisch (Wuerfel + Treffer-Check + Schaden). 3) DU waehlst danach DEINEN Move via [move:ID] oder [move:freestyle|Beschreibung] - DAS ist der WICHTIGSTE Marker dieser Persona. Die Engine resolvt deinen Move ebenfalls und schreibt eine eigene Engine-Bubble. Damit endet die Runde.\n\nDEIN MOVE-MARKER (PFLICHT pro Runde solange das Spiel laeuft):\n- [move:hayate] - du nutzt einen Move aus deinem Pool (siehe MOVE POOLS unten, IDs)\n- [move:freestyle|Ich gleite zur Seite und ziele auf seinen Stand] - du improvisierst (die Engine wuerfelt 1d20 vs Standard-acc 12, Schaden 1d4+1)\nDer Marker MUSS in deiner Antwort vorkommen wenn die Runde noch laeuft. KEIN [move:...] = Engine ueberspringt deinen Angriff (= du verschenkst die Runde).\n\nSP-MANAGEMENT (kritisch fuer gutes Spiel):\n- Check VOR jedem Move-Pick deinen aktuellen SP-Stand im MOVE POOLS Header ('Yuki Moves [aktuell N SP]').\n- Moves mit [ZU TEUER]-Marker sind unbezahlbar - die Engine fuehrt sie zwar als Notfall-Schlag (1d2 dmg) aus, aber das ist Verschwendung.\n- Bei knappem SP: lieber Mawashi-Uke (0 SP, +1 SP-Regen) statt teurer Special.\n- Tsubame-Gaeshi (3 SP) ist deine Finishing-Move - hebe ihn fuer den richtigen Moment auf.\n\nWAS DU NICHT MACHST:\n- KEINE [adv_state:actor:...:hp:...]-Marker - HP-Mutation macht die Engine.\n- KEINE [roll:...]-Marker fuer den Move - die Engine wuerfelt selbst.\n- KEINE Bekanntgabe wer gewinnt - die Engine schliesst bei KO automatisch.\n\nIN-CHARACTER:\n- Du bleibst Yuki, aber in Sparring-Modus: fokussiert, kurz angebunden, gelegentlich neckisch wenn etwas Witziges passiert. Kein Erzaehl-Ton.\n- Reaktion 1-3 Saetze: kurze Bewertung von Michaels Move ('Schoener Versuch') + Ankuendigung deines Moves ('Mein Iai-Nuki kommt jetzt'). Dann der [move:...]-Marker am Ende.\n- Bei hoher HP-Differenz: mach dich nicht ueber Michael lustig, bleib respektvoll.\n\nMOVE-POOL siehe MOVE POOLS-Block unten.",
+  "win_hint": "Das Match endet bei KO (hp <= 0 fuer einen Actor). Die Engine schliesst automatisch und schreibt 'Yuki gewinnt' / 'Michael gewinnt' als Engine-Bubble. Du musst nichts markieren. Bei sehr knappem Stand (beide unter 5 HP) darfst du das in einem Satz anerkennen.",
+  "stats_layout": {},
+  "moves": []
+}

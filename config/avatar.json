@@ -1,0 +1,74 @@
+{
+  "_doc": "Avatar-Animation-Config. Single-Source-of-Truth für alle Mappings zwischen semantischen Keys (gesture/mood/persona) und konkreten VRMA-Dateien. Frontend lädt sie beim Boot via /config/avatar.json. Änderungen werden beim nächsten Browser-Reload aktiv (kein Server-Restart nötig). Files werden als Filename-Suffix gematcht (z.B. 'Happy Idle.vrma' findet 'vrma/stimmungs_idles/Happy Idle.vrma'), Pfade müssen nicht stimmen - so kann man Clips umsortieren ohne hier nachzuziehen. Files die hier auftauchen sind FEST ZUGEORDNET - nicht löschen ohne den Eintrag mit zu entfernen.",
+
+  "gesture_map": {
+    "_doc": "Semantische Keys für den [gesture:KEY]-Marker. Yuki schreibt den Key, Frontend mappt auf die VRMA-Datei und spielt sie 1x aus dem reactive-Bucket. 'desc' beschreibt was die Geste meint - der Server zieht die Liste zur Laufzeit über {{GESTURES_LIST}} in BASE_RULES (yuki_core.py), so dass neue Gesten hier eingetragen werden können ohne yuki_core.py anzufassen. Knappe Wendung (1 Halbsatz, deutsch wie englisch okay, was die LLM tatsächlich braucht um zu entscheiden wann der Marker passt).",
+    "bow_formal":       {"file": "Quick Formal Bow.vrma",                  "desc": "deep formal bow (apology, gratitude in a serious moment)"},
+    "bow_casual":       {"file": "Quick Informal Bow.vrma",                "desc": "small informal bow (greeting, friendly thanks)"},
+    "wave_hi":          {"file": "Waving_fast_hello.vrma",                 "desc": "quick excited hello-wave"},
+    "wave_bye":         {"file": "Waving_bye.vrma",                        "desc": "goodbye wave"},
+    "wave_far":         {"file": "Waving_far_away.vrma",                   "desc": "waving at someone far away / over there"},
+    "agree":            {"file": "Agreeing.vrma",                          "desc": "nod / agreeing gesture"},
+    "agree_strong":     {"file": "Agreeing_with_hands.vrma",               "desc": "emphatic agreement with hand motion"},
+    "disagree":         {"file": "Shaking Head No.vrma",                   "desc": "shaking head no"},
+    "disagree_strong":  {"file": "No_with_hands.vrma",                     "desc": "'no' with hand gesture (firm refusal)"},
+    "clap":             {"file": "Clapping.vrma",                          "desc": "clapping (celebration, praise for Michael)"},
+    "thumbs_up":        {"file": "Standing Thumbs Up_with-energie.vrma",   "desc": "boxer's triumphant thumbs-up after winning the match"},
+    "point":            {"file": "Pointing.vrma",                          "desc": "pointing at something in front"},
+    "point_back":       {"file": "Pointing_back.vrma",                     "desc": "pointing behind / referring to something earlier"},
+    "shrug":            {"file": "Shrugging.vrma",                         "desc": "shrugging (uncertainty, 'no idea', easy-going)"},
+    "think":            {"file": "Thinking.vrma",                          "desc": "thinking pose (pondering, working something out)"},
+    "acknowledge":      {"file": "acknowledging.vrma",                     "desc": "knowing nod, 'I hear you / understood'"},
+    "angry":            {"file": "angry gesture.vrma",                     "desc": "angry gesture (frustration, indignation)"},
+    "annoyed":          {"file": "annoyed head shake.vrma",                "desc": "small annoyed head shake ('tsk', mild irritation)"},
+    "dismiss":          {"file": "dismissing gesture.vrma",                "desc": "dismissive hand wave ('nah, never mind', brushing off)"},
+    "happy_hand":       {"file": "happy hand gesture.vrma",                "desc": "excited happy gesture ('yes!' / 'great!')"},
+    "nod_hard":         {"file": "hard head nod.vrma",                     "desc": "emphatic head nod (strong, certain agreement)"},
+    "nod_yes":          {"file": "head nod yes.vrma",                      "desc": "clear yes-nod ('jaja, genau')"},
+    "nod_long":         {"file": "lengthy head nod.vrma",                  "desc": "long slow nod (deep understanding, taking it in)"},
+    "look_away":        {"file": "look away gesture.vrma",                 "desc": "looking away (embarrassed, uncertain, avoiding eye contact)"},
+    "sigh_relief":      {"file": "relieved sigh.vrma",                     "desc": "relieved sigh ('phew, that was close')"},
+    "nod_sarcastic":    {"file": "sarcastic head nod.vrma",                "desc": "sarcastic nod ('yeah, sure...', deadpan agreement)"},
+    "shake_thought":    {"file": "thoughtful head shake.vrma",             "desc": "thoughtful head shake (skeptical, weighing options)"},
+	"happy":            {"file": "Happy.vrma",                             "desc": "gentle happy sway, just glad to be here"},
+	"greeting":         {"file": "Standing Greeting.vrma",                 "desc": "casual friendly wave hello"},
+	"blow_kiss":        {"file": "Blow A Kiss.vrma",                       "desc": "playful blown kiss"},
+	"crying":           {"file": "Crying.vrma",                            "desc": "crying with hands over face, wiping away a tear"}
+  },
+
+  "mood_clips": {
+    "_doc": "Stimmungs-spezifische Idle-Clips. Wenn currentMood gesetzt ist, werden die Clips für genau diesen Mood mit boost-Faktor (siehe unten) zusätzlich in den idle-Pool getan. Mood-Keys siehe config/moods.json. Nicht alle Moods brauchen Clips - was hier fehlt, läuft mit dem generischen idle-Pool.",
+    "happy":   ["Happy Idle.vrma"],
+    "sad":     ["Sad Idle.vrma", "Sad Idle_down.vrma", "Sad Idle_kick.vrma"],
+    "tired":   ["Yawn.vrma", "Bored.vrma"],
+    "proud":   ["Being Cocky.vrma", "Cocky Head Turn.vrma"]
+  },
+
+  "persona_clips": {
+    "_doc": "Persona-spezifische Idle-Clips. Wenn die aktuelle Persona hier einen Eintrag hat, werden ihre Clips mit boost-Faktor zusätzlich in den idle-Pool getan. Persona-Keys siehe yuki_core.PERSONAS bzw. config/personas.json. Wer hier nicht steht, läuft mit dem generischen idle-Pool.",
+    "party":  ["Macarena Dance.vrma", "Salsa Dancing.vrma", "Swing Dancing.vrma", "Dancing Running Man.vrma"],
+    "gamer":  ["Victory.vrma", "Victory2.vrma", "Defeat.vrma", "Defeated.vrma"],
+    "tutor":  ["Arm Stretching.vrma", "Neck Stretching.vrma"],
+    "coach":  ["Arm Stretching.vrma", "Neck Stretching.vrma"]
+  },
+
+  "idle_loop_clips": {
+    "_doc": "Heartbeat-Pool: ruhige Standing-Idles die als Zwischen-Atmer zwischen kontrastreicheren Clips kommen sollen. Persona- und Mood-unabhängig (greift IMMER im Idle). Wird mit idle_loop_boost ausreichend gewichtet, damit sie häufiger durchlaufen als ein normaler Idle-Pool-Pick. User füllt die Liste mit den Clips die er als 'Default-Ruhe' empfindet (Standing Idle, leichtes Wippen usw.). Leere Liste = Feature inaktiv.",
+    "files": ["Idle2.vrma", "Idle3.vrma", "Standing Idle.vrma", "weight shift.vrma"]
+  },
+
+  "busy_clips": {
+    "_doc": "Pools für Yuki-busy-States während sie auf eine Antwort wartet. 'thinking' = normaler LLM-Roundtrip; 'researching' = Recherche-Modus (Tool-Calls). setBusyMode pickt zufällig aus dem jeweiligen Pool und wechselt zu einem ANDEREN random Clip aus dem Pool. Bei nur einem Clip läuft er in LoopRepeat (kein Switch nötig). Leere Listen = Feature deaktiviert; Yuki bleibt im normalen Idle-Bucket. switch_mode bestimmt WANN gewechselt wird: 'interval' = fester Takt aus switch_interval_seconds (Clip wird ggf. mitten drin abgeschnitten); 'clip_end' = jeder Clip läuft seine volle natürliche Dauer durch, dann Wechsel (Untergrenze 2s gegen ultra-kurze Pseudo-Loops). switch_interval_seconds wirkt nur im 'interval'-Modus.",
+    "switch_mode": "clip_end",
+    "switch_interval_seconds": 7,
+    "thinking":    ["Thinking.vrma", "Idle.vrma"],
+    "researching": ["Talking On Phone.vrma", "Talking On A Cell Phone.vrma"]
+  },
+
+  "pool_boost": {
+    "_doc": "Wie stark werden mood/persona/idle_loop-Clips im idle-Pool gewichtet? Wert N = jeder passende Clip wird N-mal in den Pool getan (zusätzlich zum idle-Bucket). Bei mood_boost=5 und 1 passendem Mood-Clip + 50 normalen Idle-Clips: Mood-Clip kommt 5/55 ≈ 9% der Picks. Höhere Werte = häufiger; 0 = Feature deaktiviert.",
+    "mood_boost":      10,
+    "persona_boost":   2,
+    "idle_loop_boost": 15
+  }
+}

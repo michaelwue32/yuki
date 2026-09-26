@@ -1,0 +1,127 @@
+# =============================================================================
+# pyproject.toml - Top-Level-Dependencies fuer die Haupt-Yuki-App (.venv)
+# =============================================================================
+# Dies ist die DEKLARATIVE Liste (was Yuki braucht). Die VOLLSTAENDIG GEPINNTE
+# Liste (was tatsaechlich installiert ist, inkl. transitiver Deps) liegt in
+# `requirements.lock`. Beim Reproduzieren auf einer anderen Maschine:
+#
+#   1) Neue venv anlegen + aktivieren (Python 3.14+ empfohlen):
+#        py -3.14 -m venv .venv
+#        .\.venv\Scripts\Activate.ps1
+#
+#   2) PIP aktualisieren:
+#        python -m pip install -U pip
+#
+#   3) Lock-File installieren (volle Reproduzierbarkeit):
+#        pip install -r requirements.lock
+#
+#      ODER nur die Top-Level-Deps (akzeptiert neuere transitive Versionen):
+#        pip install .
+#
+# Lock-File neu erzeugen (nach Hinzufuegen einer Top-Level-Dependency):
+#   pip install <neues-paket>
+#   pip freeze > requirements.lock
+#
+# ZWEITE VENV (F5-TTS-German, separate Anwendung):
+#   Liegt unter D:\Server\f5tts-venv (Torch-Konflikt zur Haupt-venv).
+#   Eigene Anleitung in config/f5_requirements.txt.
+# =============================================================================
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yuki"
+version = "0.1.0"
+description = "Yuki - local-only waifu Japanese tutor (STT + LLM + TTS + VLM, alles offline)"
+readme = "README.md"
+requires-python = ">=3.14"
+license = { text = "personal-use" }
+authors = [{ name = "Michael" }]
+
+# Top-Level-Dependencies, sortiert nach Funktionsbereich. Versionsuntergrenzen
+# bewusst grosszuegig - die exakten Versionen leben in `requirements.lock`,
+# damit hier `pip install .` auch nach einem Major-Update gangbar bleibt.
+dependencies = [
+    # --- HTTP / Web ---
+    "requests>=2.32",         # alle externen Calls (Ollama, GPT-SoVITS, F5, Vision, Open-Meteo)
+    "flask>=3.0",             # Web-BFF auf :8443 (server.py)
+    "cryptography>=42.0",     # self-signed HTTPS-Cert beim Start (server.py ensure_cert, x509)
+
+    # --- Numerik + Audio ---
+    "numpy>=2.0",
+    "scipy>=1.14",            # wavfile-IO (TTS-Streaming, Referenz-Audio)
+
+    # --- Speech-to-Text ---
+    "faster-whisper>=1.0",    # zieht ctranslate2/av/tokenizers/huggingface-hub mit
+    "nvidia-cublas-cu12",     # CUDA-DLLs fuer ctranslate2 (Stolperfalle 1)
+    "nvidia-cudnn-cu12",      # NICHT torch - ctranslate2 ist eigenes Backend
+
+    # --- Japanisch: Tokenisierung + Romaji ---
+    "fugashi>=1.4",           # Morpheme-Tagger (Wadoku-Tap, Recall-Keywords)
+    "unidic-lite>=1.0",       # Dictionary-Daten fuer fugashi (Py3.14 cp314 OK)
+    "jaconv>=0.3",            # Hiragana<->Katakana, Romaji-Konvertierung
+    "pykakasi>=2.2",          # Romaji-Annotation (annotate_romaji); fehlt er -> Romaji-Anzeige still aus
+
+    # --- Mathe (Tutor/Companion [calc:expr]-Marker, deterministische Auswertung) ---
+    "sympy>=1.14",            # Arithmetik + symbolisch (diff/int/solve), zieht mpmath mit
+
+    # --- CalDAV (Radicale auf example.com) ---
+    "caldav>=1.3",
+    "icalendar>=6.0",
+    "holidays>=0.50",         # offline DE+JP Feiertage (lazy import in yuki_core)
+
+    # --- Mic-Aufnahme (nur fuer Smoke-Tests in tests/test_stt.py) ---
+    "sounddevice>=0.5",
+
+    # --- Wake-Word-Modelle (nur fuer tools/fetch_wakeword_models.py) ---
+    # Bringt melspectrogram/embedding/hey_jarvis ONNX-Files mit, die das
+    # Setup-Skript nach mobile/android/app/src/main/assets/wakeword/ kopiert.
+    # Server selbst nutzt das Paket NICHT - Inferenz laeuft via onnxruntime
+    # auf dem Handy.
+    "openwakeword>=0.6",
+
+    # --- Bildverarbeitung (Vision-Uploads, Keepsakes, face_recog) ---
+    "pillow>=10.0",           # PIL: Bild-Decode/-Resize server-seitig (server.py, face_recog)
+
+    # --- Gesichtserkennung (face_recog.py, server-seitig, CPU, rein beratend) ---
+    # insightface bringt FaceAnalysis(buffalo_s) = SCRFD-Detektor + ArcFace-Embedder;
+    # ab 1.0.1 reines py3-none-any-Wheel (kein Cython-Build mehr, laeuft auf Py3.14).
+    # onnxruntime = CPU-Inferenz-Backend (CPUExecutionProvider, kein VRAM-Streit).
+    # Modelle einmalig via tools/fetch_face_models.py nach ~/.insightface/models/.
+    # ACHTUNG headless-Linux: insightface zieht opencv-python (braucht libGL.so.1, auf
+    # einer headless-Box nicht da). Nach `pip install` dort einmalig tauschen:
+    #   pip uninstall -y opencv-python && pip install opencv-python-headless
+    "insightface>=1.0.1",
+    "onnxruntime>=1.20",
+
+    # --- Dashboard-TUI (tools/yuki_dashboard.py, optional aber empfohlen) ---
+    # Service-Launcher + Live-Logs + System-Stats statt start_yuki.ps1.
+    # textual = TUI-Framework (CSS-aehnliches Layout, Threads via call_from_thread).
+    # psutil = CPU/RAM-Stats; GPU-Stats werden via nvidia-smi-Subprocess geparst.
+    "textual>=8.0",
+    "psutil>=7.0",
+    # windows-toasts: Service-Down-Notifications am Windows-Notification-Center
+    # (Dashboard sendet Toast nur bei up->down-Uebergang). Optional - das Modul
+    # importiert defensiv in yuki_dashboard.py und schaltet auf no-op wenn
+    # weg. cp314-Wheels sind verfuegbar (Stand 2026).
+    "windows-toasts>=1.3",
+    # pypdf: mergt die pro-Pipeline gerenderten Graphviz-PDF-Seiten zur
+    # Architektur-Landkarte (docs/architecture/build_map.py). Reines Python.
+    "pypdf>=5.0",
+]
+
+# Optionale Test-Deps. tests/test_face_recog.py nutzt pytest (pure-Logik +
+# Store-Roundtrip + Flask-Testclient, laeuft ohne aktive Services); die aelteren
+# tests/test_*.py brauchen weiterhin laufende Dienste.
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.urls]
+Source = "local-only"  # kein public Repo
+
+# setuptools-Config: kein installierbares Paket bauen, das ist ein Application-Repo
+# (die Module liegen flach im Root). pip install . wuerde sonst meckern.
+[tool.setuptools]
+py-modules = []

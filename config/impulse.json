@@ -1,0 +1,17 @@
+{
+  "_doc": "Impuls-Gate fuer die ZWEI Dauer-Loops (Spontan + Beobachten). Yuki URTEILT, ob sie von selbst redet, statt reflexartig reagieren zu MUESSEN. Leiter: none > thought (leiser 💭-Gedanke) > react (lauter Chat-Beitrag). Live-Reload (kein Restart). Der MANUELLE Trigger (Name/💭 anklicken) und das manuelle Foto (📷/V) laufen NICHT hier durch - die bleiben verpflichtend.",
+  "enabled": true,
+  "_enabled": "false = Rollback auf den alten Zwangs-Reflex (Timer/Aenderung -> immer reagieren).",
+  "quiet_start": 0,
+  "quiet_end": 8,
+  "_quiet": "Quiet-Hours [start, end) lokale Stunde -> beide Loops schweigen ganz. start==end (z.B. 0,0) = aus. Beispiel Nachtruhe: 0 und 8.",
+  "model_floor_b": 12,
+  "_model_floor_b": "Modell-Untergrenze (Mrd Params). Failovert Ollama auf 8b, schweigt Yuki lieber, statt mit schwachem Modell zu urteilen.",
+  "thought_channel": true,
+  "_thought_channel": "false = zurueckgehaltene Impulse verfallen still, statt als 💭-Gedanke ins Log zu wandern.",
+  "thought_max_per_day": 12,
+  "thought_min_gap_min": 0,
+  "_thought_budget": "Tages-Budget + Mindestabstand (Min) des leisen Kanals. Eigener Bucket, getrennt vom Steward.",
+  "react_confidence_floor": 0.7,
+  "_react_confidence_floor": "NUR Beobachten (Vision-Loop): das Gate-LLM bewertet jeden Impuls mit confidence (0..1). Ein 'thought' mit confidence >= diesem Wert wird zu einer LAUTEN Chat-Reaktion (react) hochgestuft, statt nur ins stille 💭-Log zu wandern. Hebt Yukis autonome Beobachtung wieder ueber die Schwelle 'sichtbar'. Hoch = seltener laut, niedrig = gespraechiger, 0 = Feature aus (nur 💭). Greift systembedingt nur bei grossem Modell (>= model_floor_b), da darunter der Loop ohnehin ganz schweigt. Live-Reload."
+}

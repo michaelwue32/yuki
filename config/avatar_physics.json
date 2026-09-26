@@ -1,0 +1,25 @@
+{
+  "_doc": "Avatar-Physics-Tunables (2026-06-02). Werden direkt vom Frontend via /config/avatar_physics.json geladen (siehe _loadConfigs in web/index.html). Datei ist OPTIONAL - fehlende Datei oder fehlende Keys nutzen die hardcoded Defaults aus dem Collider-Block in web/index.html. Nach Edit: Browser-Reload, kein Server-Restart noetig. Setze Werte auf null um den Default zu erzwingen.",
+
+  "skirt_colliders": {
+    "_doc": "Arm-Collider die Roecke/Coats/Hosen-Saeume (alle Joints mit isSkirt) wegdruecken statt durchclippen zu lassen. Wirkt NUR auf Spring-Bone-Joints; statisch geskinnte Bereiche (oberer Rock am Huefte-Bone) reagieren nicht. Capsule-Position wird per child-bone-world->parent-local berechnet (laeuft Bone entlang vom Ellbogen zum Handgelenk). Hand-Sphere sitzt am Handgelenk und deckt Faust+darunter ab.",
+
+    "enabled": true,
+    "//enabled": "Master-Schalter. false = keine Collider, Roecke clippen wie vor 2026-06-02. true = aktiv.",
+
+    "show_helpers": false,
+    "//show_helpers": "true rendert VRMSpringBoneColliderHelper-Wireframes (lila Linien) in die Scene. Fuer Capsule-Position-Debugging. WICHTIG: Helper rendert gegen matrixWorld, _collision() liest colliderMatrix - sichtbare Wireframes beweisen NICHT, dass Collision feuert (siehe memory/yuki-skirt-colliders.md).",
+
+    "lowerarm_capsule_radius": 0.07,
+    "//lowerarm_capsule_radius": "Radius der Capsule entlang Unterarm (Ellbogen -> Handgelenk). Min: 0.04, Max: 0.15, Default: 0.07. Bei 0.05 hat es im Test NICHT gegriffen (Skirt-Joint-Tails liegen versetzt vom Bone-Mittelpunkt) - Faustregel ~2x optisch gefuehlte Dicke.",
+
+    "hand_sphere_radius": 0.10,
+    "//hand_sphere_radius": "Radius der Sphere am Hand-Bone. Deckt Faust + Bereich handgelenk->fingerspitzen ab. Min: 0.05, Max: 0.15, Default: 0.10. Bei 0.07 reicht die Reichweite oft nicht bis zur Rock-Mitte (Handgelenk sitzt auf Huefthoehe).",
+
+    "upperarm_capsule_radius": 0,
+    "//upperarm_capsule_radius": "Radius der Capsule entlang Oberarm (Schulter -> Ellbogen). 0 oder negativ = AUS (Default). Vorsicht: jeder Wert > 0 pusht den oberen Rockbereich im stehenden Idle dauerhaft nach aussen ('aufgeplustert'). Empfehlung 0.05-0.06 falls eingeschaltet, dazu beobachten ob Idle-Pose noch natuerlich aussieht.",
+
+    "hit_radius_floor": 0.02,
+    "//hit_radius_floor": "Mindest-hitRadius pro Skirt-Joint (= 'Fleisch' am Joint-Tail zum Wegdruecken). VRoid exportiert blicherweise schon 0.020 - der Bump greift nur wenn der VRM-Wert kleiner ist. Min: 0, Max: 0.05, Default: 0.02. 0 = nicht anfassen."
+  }
+}

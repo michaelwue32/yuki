@@ -1,0 +1,23 @@
+{
+  "default": "yuki",
+  "voices": [
+    {
+      "id": "eva",
+      "label": "Eva",
+      "ref_audio": "D:/Projects/yuki/voices/narrators/eva.wav",
+      "ref_text": "Guten Abend. Setz dich bequem hin, atme einmal tief durch, und ich erzähle dir jetzt eine ruhige Geschichte."
+    },
+    {
+      "id": "kerstin",
+      "label": "Kerstin",
+      "ref_audio": "D:/Projects/yuki/voices/narrators/kerstin.wav",
+      "ref_text": "Guten Abend. Setz dich bequem hin, atme einmal tief durch, und ich erzähle dir jetzt eine ruhige Geschichte."
+    },
+    {
+      "id": "ramona",
+      "label": "Ramona",
+      "ref_audio": "D:/Projects/yuki/voices/narrators/ramona.wav",
+      "ref_text": "Guten Abend. Setz dich bequem hin, atme einmal tief durch, und ich erzähle dir jetzt eine ruhige Geschichte."
+    }
+  ]
+}

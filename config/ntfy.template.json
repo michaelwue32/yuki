@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "url": "https://example.com",
+  "topic": "yuki",
+  "token": "tk_REPLACE_ME",
+  "click_url": "yuki://open"
+}

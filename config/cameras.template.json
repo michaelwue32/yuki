@@ -1,0 +1,80 @@
+{
+  "//": "Kamera-Quellen fuer Yukis Augen (autonomes Beobachten). Diese Datei ist die",
+  "//2": "VORLAGE - echte Datei heisst config/cameras.json (gitignored, Credentials).",
+  "//3": "Typen: 'dshow' (lokale USB-Cam), 'http_snap' (Netzwerk-Cam Standbild-URL),",
+  "//4": "'rtsp' (Netzwerk-Cam Stream), 'reolink' (Reolink JSON-API, Snap+PTZ via Token).",
+  "//5": "PTZ-kind: 'hi3510' (native CGI, number_offset -1 weil CGI 0-basiert) oder",
+  "//6": "      'reolink' (PtzCtrl ToPos, id DIREKT -> number_offset 0). presets:",
+  "//7": "      Positionsnummer -> Beschreibung, die Yuki sagt, worauf sie schaut.",
+  "//8": "  \"watch\": true  = diese Cam ist Teil von Yukis autonomem Beobachtungs-",
+  "//9": "      Reigen (sie wechselt durch ALLE watch-Cams + deren Presets). Fehlt das",
+  "//10": "      Flag ueberall, wird nur default_source beobachtet (Verhalten wie frueher).",
+  "//11": "  \"label\": menschlicher Name fuer Prompt/[lookat:CAM|N] (Marker nutzt den Key).",
+
+  "default_source": "upcam",
+
+  "sources": {
+    "brio": {
+      "type": "dshow",
+      "device": "Logitech BRIO",
+      "warmup_frames": 45,
+      "video_size": "1280x720"
+    },
+
+    "upcam": {
+      "type": "http_snap",
+      "label": "die Cam von oben",
+      "watch": true,
+      "snap_url": "http://CAM-IP/tmpfs/snap.jpg",
+      "user": "user",
+      "pass": "PASSWORT",
+      "timeout": 10,
+      "ptz": {
+        "kind": "hi3510",
+        "base": "http://CAM-IP/web/cgi-bin/hi3510",
+        "number_offset": -1,
+        "home": 1,
+        "park_home_on_stop": true,
+        "rotate": true,
+        "rotate_interval": 90,
+        "settle": { "max_s": 15, "interval": 1.0, "thresh": 5.0, "lead": 1.5 },
+        "presets": {
+          "1": "Beschreibung Position 1",
+          "2": "Beschreibung Position 2"
+        }
+      }
+    },
+
+    "roomcam": {
+      "type": "reolink",
+      "label": "die schwenkbare Raum-Cam",
+      "watch": true,
+      "api_url": "http://CAM-IP/cgi-bin/api.cgi",
+      "user": "admin",
+      "pass": "PASSWORT",
+      "channel": 0,
+      "timeout": 10,
+      "ptz": {
+        "kind": "reolink",
+        "number_offset": 0,
+        "home": 0,
+        "park_home_on_stop": true,
+        "rotate": true,
+        "rotate_interval": 90,
+        "speed": 32,
+        "settle": { "max_s": 5, "interval": 0.6, "thresh": 5.0, "lead": 0.8 },
+        "presets": {
+          "0": "Beschreibung Position 0",
+          "1": "Beschreibung Position 1"
+        }
+      }
+    },
+
+    "gamecap": {
+      "type": "dshow",
+      "device": "Hagibis",
+      "watch": false,
+      "note": "HDMI-Capture (Hagibis MS2130, TV/Konsole). Nur der Gaming-Loop greift sie."
+    }
+  }
+}

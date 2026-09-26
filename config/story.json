@@ -1,0 +1,7 @@
+{
+  "target_paragraphs": 8,
+  "num_predict": 4096,
+  "num_ctx_small": 16384,
+  "num_ctx_strong": 32768,
+  "min_paragraphs": 3
+}

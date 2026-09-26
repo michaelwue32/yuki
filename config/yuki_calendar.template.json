@@ -1,0 +1,7 @@
+{
+  "_doc": "Template fuer config/yuki_calendar.json. Echte Datei mit Credentials NICHT einchecken (siehe .gitignore). Workflow: cp yuki_calendar.template.json yuki_calendar.json und Werte eintragen.",
+  "url": "https://<host>/<user>/",
+  "user": "<dav-user>",
+  "pass": "<dav-password>",
+  "calendar_name": "Yuki"
+}
