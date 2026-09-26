@@ -186,7 +186,7 @@ Formal Bow" mit ~2 s) liefen 2 s richtig, dann 6 s Standstill in der End-Pose �
 im Loop fühlte es sich an als „Yuki bleibt mittendrin stehen". Längere Mixamo-
 Clips wurden hinten abgeschnitten.
 
-**Fix:** in `convert_mixamo_to_vrma.py` nach dem Bone-Assignment + Hip-FCurve-
+**Fix:** in `tools/convert_mixamo_to_vrma.py` nach dem Bone-Assignment + Hip-FCurve-
 Behandlung:
 ```python
 fr_start, fr_end = action.frame_range          # liefert Floats

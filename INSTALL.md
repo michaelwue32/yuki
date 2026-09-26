@@ -74,11 +74,15 @@ weiterverteilt werden — hol sie dir selbst:
 1. Bei Mixamo mit eigenem (kostenlosem) Account die gewünschten Clips als **FBX**
    herunterladen.
 2. **Konvertierung FBX → VRMA** über Blender + VRM-Addon +
-   `avatar/animations_source/convert_mixamo_to_vrma.py`.
+   `tools/convert_mixamo_to_vrma.py`.
+   - Vorher im Skript den **Arbeitsordner** setzen: `SCRIPT_DIR` (oder die
+     Umgebungsvariable `YUKI_ANIM_DIR`) auf einen Ordner deiner Wahl. Darunter:
+     `mixamo/` (deine FBX rein) und `vrma/` (Output). Das Skript spiegelt die
+     Unterordner-Struktur (`mixamo/idle/X.fbx` → `vrma/idle/X.vrma`).
    - ⚠ **Stolperfalle:** Die Scene-Frame-Range in Blender **explizit** setzen,
      sonst werden alle Clips exakt 8,33 s lang (Blender-Default 1..250 @ 30 fps).
-3. Ergebnis nach `avatar/animations/vrma/<bucket>/…` legen (Buckets: `idle`,
-   `listening`, `reaktive_gesten`, `stimmungs_idles`, `persona-spezifisch`, …).
+3. Die fertigen `.vrma` nach `avatar/animations/vrma/<bucket>/…` legen (Buckets:
+   `idle`, `listening`, `reaktive_gesten`, `stimmungs_idles`, `persona-spezifisch`, …).
 
 Ohne Animationen steht der Avatar still — der Rest funktioniert.
 

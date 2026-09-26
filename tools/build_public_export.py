@@ -85,7 +85,10 @@ def scan_for_leaks(root: Path, forbidden, skip_exts) -> list[tuple[str, int, str
     for f in sorted(root.rglob("*")):
         if not f.is_file() or f.suffix.lower() in skip:
             continue
-        rel = f.relative_to(root).as_posix()
+        relp = f.relative_to(root)
+        if ".git" in relp.parts:
+            continue  # Git-Metadaten (Reflog/config/objects) sind nie Teil des Exports
+        rel = relp.as_posix()
         try:
             lines = f.read_text(encoding="utf-8").splitlines()
         except (UnicodeDecodeError, ValueError):
@@ -106,6 +109,25 @@ def _force_rmtree(path: Path) -> None:
     shutil.rmtree(path, onexc=_onexc)
 
 
+def _clear_dir_keep_git(out_dir: Path) -> None:
+    """Inhalt von out_dir leeren, aber ein vorhandenes .git ERHALTEN. So behalten
+    aufeinanderfolgende Exporte eine durchgehende git-Historie (inkrementelle
+    Commits + normaler Push statt Force-Push-Snapshots). Ist noch kein .git da,
+    ist das schlicht ein Voll-Leeren."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for entry in out_dir.iterdir():
+        if entry.name == ".git":
+            continue
+        if entry.is_dir():
+            _force_rmtree(entry)
+        else:
+            try:
+                entry.unlink()
+            except PermissionError:
+                os.chmod(entry, stat.S_IWRITE)
+                entry.unlink()
+
+
 def list_tracked_files(repo_root: Path) -> list[str]:
     """git ls-files (nur getrackte Dateien), sortiert.
 
@@ -124,9 +146,7 @@ def build_export(repo_root, out_dir, manifest, public_dir, source_files) -> dict
     """Bereinigten Export-Tree bauen: filtern, sanitizen, Public-Dateisatz
     overlayen, Leak-Scan. Report-Dict inkl. 'leaks' (leer = sauber)."""
     repo_root, out_dir, public_dir = Path(repo_root), Path(out_dir), Path(public_dir)
-    if out_dir.exists():
-        _force_rmtree(out_dir)
-    out_dir.mkdir(parents=True)
+    _clear_dir_keep_git(out_dir)
     copied = excluded = subs = overlaid = 0
     for rel in sorted(source_files):
         if not path_included(rel, manifest):
